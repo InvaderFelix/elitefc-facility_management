@@ -71,7 +71,7 @@ Person created
 Represents the organisational hierarchy of the academy; seasons containing teams, which have team members, coaches, and team managers. This is the operational end of squad management.
 ```
 Season (2026)                              Players
-    |                                      Coaches
+    │                                      Coaches
     └── Teams                       ┌────  Managers
             └── U10 Boys    ── Members     
                 U12 Girls   ── Members ──  ...
@@ -168,7 +168,7 @@ Defines who belongs to the academy and under what commercial arrangement.
 Membership Type
     └─ Elite Academy ($250/month)
         └─ Membership
-            |
+            │
             └─ Tom Smith
                 └─ Jan-Dec 2026
 ```
@@ -201,7 +201,7 @@ Communication
     "Training cancelled"
         ↓                               ┌─ SMS delivered
         Recipients                      ├─ Email opened
-            |                           |
+            │                           │
             └─ Parents of U12 team ── Delivery
 ```
 | Table | Purpose |
@@ -240,12 +240,12 @@ An approximated model of the dependency flow looks like:
 Identity & People
     ├─────────────── Membership
 Player Management                                   ── Finance
-        |                                           ── Communications
+        │                                           ── Communications
     Academy Structure                               ── Documents
-            |                                       (supporting services
+            │                                       (supporting services
         Events & Activities                          across all domains)         
                 ├─────────────── Facilities
             Competitions
-                    |
+                    │
                 Fitness & Gym
 ```
