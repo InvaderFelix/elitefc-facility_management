@@ -2,6 +2,12 @@ Add "title" to persons table for Title/Salutations
 
 --------------
 
+alter table public.persons add column auth_user_id uuid unique references auth.users(id);
+
+Nullable, most children won't have one, this links a persons.id to Supabase's auth.users.id. RLS policies and Edge Functions need to map a signed-in JWT back to "which person is this, and what can they see."
+
+--------------
+
 Check auth.users for email registration workflow  
 
 OR
