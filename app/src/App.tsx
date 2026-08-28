@@ -1,188 +1,69 @@
-import { FormEvent, MouseEvent, useState } from "react";
+import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import "./App.css";
+import { Home } from "./pages/Home";
+import { Academy } from "./pages/Academy";
+import { Coaches } from "./pages/Coaches";
+import { Players } from "./pages/Players";
+import { Programs } from "./pages/Programs";
+import { Contact } from "./pages/Contact";
+
+const NAV_LINKS = [
+  { to: "/academy", label: "Academy" },
+  { to: "/coaches", label: "Coaches" },
+  { to: "/players", label: "Players" },
+  { to: "/programs", label: "Programs" },
+  { to: "/contact", label: "Contact" },
+];
 
 function App() {
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setIsLoggingIn(true);
-
-    setTimeout(() => {
-      setIsLoggingIn(false);
-
-      alert(
-        "Demo only — connect this form to your authentication system."
-      );
-    }, 800);
-  };
-
-  const handleForgotPassword = (
-    event: MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault();
-
-    alert(
-      "Demo only — connect this link to your password reset flow."
-    );
-  };
-
   return (
-    <div className="page">
-      <div className="background" />
+    <BrowserRouter>
+      <div className="page">
+        <div className="background" />
 
-      <header>
-        <div className="logo">
-          <div className="logo-mark">E</div>
-
-          <div className="logo-text">
-            ELITE FOOTBALL
-            <span>ACADEMY • MELBOURNE</span>
-          </div>
-        </div>
-
-        <nav>
-          <a href="#">Academy</a>
-          <a href="#">Programs</a>
-          <a href="#">Pathway</a>
-          <a href="#">Contact</a>
-        </nav>
-      </header>
-
-      <main>
-        <section className="hero">
-          <div className="eyebrow">
-            Player &amp; Parent Portal
-          </div>
-
-          <h1>
-            Become
-            <span>Elite.</span>
-          </h1>
-
-          <p className="hero-description">
-            Your football journey starts here. Access your training,
-            fixtures, development progress and Academy updates from
-            one place.
-          </p>
-
-          <div className="stats">
-            <div className="stat">
-              <strong>01</strong>
-              <small>Train</small>
+        <header>
+          <Link to="/" className="logo">
+            <div className="logo-mark">E</div>
+            <div className="logo-text">
+              ELITE FOOTBALL
+              <span>ACADEMY • MELBOURNE</span>
             </div>
+          </Link>
 
-            <div className="stat">
-              <strong>02</strong>
-              <small>Develop</small>
-            </div>
-
-            <div className="stat">
-              <strong>03</strong>
-              <small>Compete</small>
-            </div>
-
-            <div className="stat">
-              <strong>04</strong>
-              <small>Progress</small>
-            </div>
-          </div>
-        </section>
-
-        <section className="login-card">
-          <div className="card-header">
-            <div className="card-title">
-              Welcome
-              <br />
-              <span>Back.</span>
-            </div>
-
-            <div className="member-badge">
-              MEMBER
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="email">
-                Email / Username
-              </label>
-
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                autoComplete="email"
-                required
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="password">
-                Password
-              </label>
-
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                required
-              />
-            </div>
-
-            <div className="form-options">
-              <label className="remember">
-                <input
-                  type="checkbox"
-                  id="remember"
-                />
-
-                <span>Remember me</span>
-              </label>
-
-              <a
-                href="#"
-                className="forgot"
-                onClick={handleForgotPassword}
+          <nav>
+            {NAV_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => (isActive ? "active" : undefined)}
               >
-                Forgot password?
-              </a>
-            </div>
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+        </header>
 
-            <button
-              type="submit"
-              className="login-button"
-              disabled={isLoggingIn}
-            >
-              {isLoggingIn ? "LOGGING IN..." : "LOG IN"}
-            </button>
-          </form>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/academy" element={<Academy />} />
+          <Route path="/coaches" element={<Coaches />} />
+          <Route path="/players" element={<Players />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
 
-          <div className="divider" />
-
-          <div className="join">
-            New to Elite? &nbsp;
-            <a href="#">
-              Join the Academy →
-            </a>
+        <footer>
+          <div>
+            <strong>ELITE FOOTBALL ACADEMY</strong>
+            &nbsp; • &nbsp;
+            Train. Play. Develop.
           </div>
-        </section>
-      </main>
 
-      <footer>
-        <div>
-          <strong>ELITE FOOTBALL ACADEMY</strong>
-          &nbsp; • &nbsp;
-          Train. Play. Develop.
-        </div>
-
-        <div>
-          © 2026 Elite Football Academy
-        </div>
-      </footer>
-    </div>
+          <div>© 2026 Elite Football Academy</div>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 

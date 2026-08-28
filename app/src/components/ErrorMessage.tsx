@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { type HTMLAttributes, type ReactNode } from 'react';
 
 interface ErrorMessageProps extends HTMLAttributes<HTMLParagraphElement> {
   children: ReactNode;

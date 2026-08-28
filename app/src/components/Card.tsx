@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { type HTMLAttributes, type ReactNode } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   /* Small label above the title, e.g. "Step 2 of 4" */

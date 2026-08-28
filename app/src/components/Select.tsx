@@ -1,4 +1,4 @@
-import { SelectHTMLAttributes, forwardRef, useId } from 'react';
+import { forwardRef, useId, type SelectHTMLAttributes } from 'react';
 import { ErrorMessage } from './ErrorMessage';
 
 export interface SelectOption {

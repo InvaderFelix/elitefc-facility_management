@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef, useId } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes } from 'react';
 import { ErrorMessage } from './ErrorMessage';
 
 interface DateInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'min' | 'max'> {

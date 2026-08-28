@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef, useId } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes } from 'react';
 import { ErrorMessage } from './ErrorMessage';
 
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
