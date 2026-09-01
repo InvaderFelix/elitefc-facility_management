@@ -26,6 +26,10 @@ Success Response
 - [x] Uniform responsive layout — single `App.css`, fluid `clamp()` sizing, mobile stacking
 - [x] Edge Function stubs + `shared/` skeleton (`errors.ts`, `responses.ts`, `validation.ts`)
 - [x] `docs/` (architecture, database dictionary, decisions, workflows)
+- [x] Sticky/following navbar (frosted `backdrop-filter` header)
+- [x] Coach cards + lightbox rebuild — clickable portrait tiles with "View" pill, centered 60% lightbox, heavy right-edge image fade, prev/next navigation, click-anywhere/Escape/X close, no scrollbars, open/close + content transitions
+- [x] Academy facility services section (real services from elitefootballcentre.com.au: pitch hire, birthday parties, gym, leagues, cafe & licensed bar, venue hire) placed above the login box, hero title pinned to the top
+- [x] `vercel.json` (SPA rewrite `/(.*)` → `/index.html` + `rootDirectory: "app"`)
 
 ## Registration Workflow
 
@@ -50,8 +54,8 @@ Success Response
 ## Deployment
 
 - [ ] Vercel demo page via GitHub auto-deploy (deploys the `app/` directory)
-- [ ] Add `vercel.json` (SPA rewrite `/(.*)` → `/index.html` + `rootDirectory: "app"`)
-- [ ] Create a GitHub repo and connect to Vercel once auth env is configured
+- [x] Add `vercel.json` (SPA rewrite `/(.*)` → `/index.html` + `rootDirectory: "app"`)
+- [x] Create a GitHub repo and connect to Vercel once auth env is configured (repo pushed to `InvaderFelix/elitefc-facility_management`; Vercel import not yet done)
 
 ## Next Up
 
