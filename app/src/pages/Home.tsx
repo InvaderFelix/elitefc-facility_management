@@ -25,7 +25,7 @@ export function Home() {
 
           <h1>
             Become
-            <span>Elite.</span>
+            <span>Elite</span>
           </h1>
 
           <p className="hero-description">
@@ -58,7 +58,7 @@ export function Home() {
             <div className="card-title">
               Welcome
               <br />
-              <span>Back.</span>
+              <span>Back</span>
             </div>
 
             <div className="member-badge">MEMBER</div>
