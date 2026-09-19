@@ -1,10 +1,10 @@
-import { forwardRef, useId, type InputHTMLAttributes } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
 import { ErrorMessage } from './ErrorMessage';
 
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
-  hint?: string;
+  hint?: ReactNode;
   required?: boolean;
 }
 

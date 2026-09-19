@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 import "../App.css";
 import { Card } from "../components/Card";
 import { TextInput } from "../components/TextInput";
@@ -35,13 +36,28 @@ export function Contact() {
         </p>
       </section>
 
+      <section className="login-callout">
+        <div className="login-callout__body">
+          <div className="login-callout__kicker">QUICKEST WAY TO GET THINGS DONE</div>
+          <h2>Log in to Manage Your Bookings &amp; Sessions</h2>
+          <p>
+            The contact form is for general enquiries only. To book pitches,
+            gym sessions and parties, manage your Academy schedule, or join a
+            team — you&apos;ll need to be logged in to your account.
+          </p>
+        </div>
+        <Link to="/academy" className="login-callout__cta">
+          Log in to Your Account →
+        </Link>
+      </section>
+
       <section className="contact-layout">
         <div className="map-section">
           <Card eyebrow="Location" title="Elite Football Centre">
             <div className="card__body">
               <div className="map-container">
                 <div className="map-box">
-                  <div className="map-icon" aria-hidden="true">
+                  <div aria-hidden="true">
                     📍
                   </div>
 

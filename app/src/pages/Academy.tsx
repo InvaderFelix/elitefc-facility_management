@@ -1,14 +1,125 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
 import { Card } from "../components/Card";
 
+interface ServiceCard {
+  eyebrow: string;
+  title: string;
+  body: string;
+  items: string[];
+  message: string;
+  links: { to: string; label: string; variant: "primary" | "secondary" }[];
+}
+
+const SERVICE_CARDS: ServiceCard[] = [
+  {
+    eyebrow: "Book Courts",
+    title: "Pitch Hire",
+    body: "FIFA-grade indoor and outdoor pitches, open 7 days.",
+    items: [
+      "Indoor 7-a-side — $240 per hour",
+      "Indoor 5-a-side — $120 per hour",
+      "Outdoor 5-a-side — $110 per hour",
+    ],
+    message:
+      "Log in to book a pitch for next session — or register if you haven't created an account yet.",
+    links: [
+      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/register", label: "Register", variant: "secondary" },
+    ],
+  },
+  {
+    eyebrow: "Competition",
+    title: "Leagues",
+    body: "Social and competitive football all year round with live results.",
+    items: [
+      "Adult League — Monday 7-a-side social · Tuesday intermediate",
+      "Junior League — ESL summer competition",
+      "Fixtures, results & replays published live",
+    ],
+    message:
+      "Log in to enter your team into a league — or register if you haven't created an account yet.",
+    links: [
+      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/register", label: "Register", variant: "secondary" },
+    ],
+  },
+  {
+    eyebrow: "Weekends",
+    title: "Birthday Parties",
+    body: "Party packages with exclusive pitch use and our licensed cafe.",
+    items: ["Saturdays & Sundays", "Party food packages available"],
+    message:
+      "Log in to book a party, register for an account, or contact us to enquire about availability.",
+    links: [
+      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/register", label: "Register", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "secondary" },
+    ],
+  },
+  {
+    eyebrow: "Events",
+    title: "Venue Hire",
+    body: "Hire the whole venue for events, schools, tournaments and functions.",
+    items: ["Change rooms & amenities", "Free on-site parking"],
+    message:
+      "Log in to book the venue, register for an account, or contact us to enquire about your event.",
+    links: [
+      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/register", label: "Register", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "secondary" },
+    ],
+  },
+  {
+    eyebrow: "Members",
+    title: "Gym Access",
+    body: "A fully equipped strength and conditioning space for footballers.",
+    items: ["Performance gym", "Bookable for your own training"],
+    message:
+      "Log in to book the gym, register for an account, or contact us to enquire about membership.",
+    links: [
+      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/register", label: "Register", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "secondary" },
+    ],
+  },
+  {
+    eyebrow: "All Week",
+    title: "Cafe & Licensed Bar",
+    body: "Coffee, food and licensed bar for players, parents and spectators.",
+    items: ["Monday–Friday 8am–8pm", "Saturday–Sunday 8am–9pm"],
+    message:
+      "Log in to book the cafe space, register for an account, or contact us to enquire about functions.",
+    links: [
+      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/register", label: "Register", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "secondary" },
+    ],
+  },
+];
+
 export function Academy() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [openCard, setOpenCard] = useState<number | null>(null);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoggedIn(true);
+  };
+
+  const toggleCard = (index: number) => {
+    setOpenCard((current) => (current === index ? null : index));
+  };
+
+  const handleCardKey = (
+    event: KeyboardEvent<HTMLElement>,
+    index: number
+  ) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleCard(index);
+    }
   };
 
   return (
@@ -81,7 +192,7 @@ export function Academy() {
 
           <div className="join">
             New to Elite? &nbsp;
-            <Link to="/academy">Join the Academy →</Link>
+            <Link to="/register">Join the Academy →</Link>
           </div>
         </section>
       </section>
@@ -97,83 +208,56 @@ export function Academy() {
         </div>
 
         <div className="services-grid">
-          <Card eyebrow="Book Courts" title="Pitch Hire">
-            <div className="card__body">
-              <p className="muted">
-                FIFA-grade indoor and outdoor pitches, open 7 days.
-              </p>
-              <ul>
-                <li>Indoor 7-a-side — $240 per hour</li>
-                <li>Indoor 5-a-side — $120 per hour</li>
-                <li>Outdoor 5-a-side — $110 per hour</li>
-              </ul>
-            </div>
-          </Card>
+          {SERVICE_CARDS.map((card, index) => {
+            const isOpen = openCard === index;
 
-          <Card eyebrow="Weekends" title="Birthday Parties">
-            <div className="card__body">
-              <p className="muted">
-                Exclusive pitch use, a dedicated party area and our licensed
-                cafe make party day easy.
-              </p>
-              <ul>
-                <li>Saturdays & Sundays</li>
-                <li>Party food packages available</li>
-              </ul>
-            </div>
-          </Card>
+            return (
+              <article
+                key={card.title}
+                className={`card services-card ${
+                  isOpen ? "services-card--open" : ""
+                }`}
+                onClick={() => toggleCard(index)}
+                onKeyDown={(event) => handleCardKey(event, index)}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isOpen}
+              >
+                <div className="card__header">
+                  <span className="card__eyebrow">{card.eyebrow}</span>
+                  <h2 className="card__title">{card.title}</h2>
+                </div>
 
-          <Card eyebrow="Members" title="Gym Access">
-            <div className="card__body">
-              <p className="muted">
-                A fully equipped strength and conditioning space built for
-                footballers.
-              </p>
-              <ul>
-                <li>Performance gym</li>
-                <li>Bookable for your own training</li>
-              </ul>
-            </div>
-          </Card>
+                <div className="card__body">
+                  <p>{card.body}</p>
+                  <ul>
+                    {card.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
 
-          <Card eyebrow="Competition" title="Leagues">
-            <div className="card__body">
-              <p className="muted">
-                Social and competitive football, all year round.
-              </p>
-              <ul>
-                <li>Adult League — Monday 7-a-side social · Tuesday intermediate</li>
-                <li>Junior League — ESL summer competition</li>
-                <li>Fixtures, results & replays published live</li>
-              </ul>
-            </div>
-          </Card>
+                <div className="services-card__overlay">
+                  <div className="services-card__content">
+                    <h3 className="services-card__title">{card.title}</h3>
+                    <p className="services-card__message">{card.message}</p>
 
-          <Card eyebrow="All Week" title="Cafe & Licensed Bar">
-            <div className="card__body">
-              <p className="muted">
-                Coffee, food and licensed bar for players, parents and
-                spectators.
-              </p>
-              <ul>
-                <li>Monday–Friday 8am–8pm</li>
-                <li>Saturday–Sunday 8am–9pm</li>
-              </ul>
-            </div>
-          </Card>
-
-          <Card eyebrow="Events" title="Venue Hire">
-            <div className="card__body">
-              <p className="muted">
-                Hire the whole venue or any part of it for corporate events,
-                schools, tournaments and functions.
-              </p>
-              <ul>
-                <li>Change rooms & amenities</li>
-                <li>Free on-site parking</li>
-              </ul>
-            </div>
-          </Card>
+                    <div className="services-card__actions">
+                      {card.links.map((link) => (
+                        <Link
+                          key={link.to + link.label}
+                          to={link.to}
+                          className={`btn btn--${link.variant}`}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -181,7 +265,7 @@ export function Academy() {
         <section className="booking-info">
           <Card eyebrow="Bookings" title="Facility Bookings">
             <div className="card__body">
-              <p className="muted">
+              <p>
                 Book courts, gym sessions, and pitch bookings through the
                 member portal. Select your preferred date, time, and session
                 type below.
@@ -210,7 +294,7 @@ export function Academy() {
 
           <Card eyebrow="Schedule" title="Training Schedule">
             <div className="card__body">
-              <p className="muted">
+              <p>
                 View and manage your player&apos;s training sessions and match
                 fixtures throughout the season.
               </p>

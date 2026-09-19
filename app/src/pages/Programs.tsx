@@ -82,7 +82,7 @@ export function Programs() {
       <section className="cards-grid">
         {AGE_GROUPS.map((group) => (
           <details className="program-panel" key={group.id}>
-            <summary className="program-summary">
+            <summary>
               <span className="program-title">{group.title}</span>
               <span className="program-age">{group.ageRange}</span>
               <span className="program-chevron" aria-hidden="true">
@@ -91,7 +91,7 @@ export function Programs() {
             </summary>
 
             <div className="program-content">
-              <p className="program-description">{group.description}</p>
+              <p>{group.description}</p>
 
               <ul>
                 {group.focus.map((focus) => (

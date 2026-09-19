@@ -111,7 +111,7 @@ export function Home() {
 
           <div className="join">
             New to Elite? &nbsp;
-            <Link to="/academy">Join the Academy →</Link>
+            <Link to="/register">Join the Academy →</Link>
           </div>
         </section>
       </section>

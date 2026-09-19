@@ -36,6 +36,9 @@ coverage/
 *.tmp
 *.temp
 
+# Media scratch
+/.media-scratch
+
 # Local configuration
 *.local
 

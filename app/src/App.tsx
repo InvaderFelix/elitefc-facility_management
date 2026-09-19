@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, NavLink, Link, useLocation } from "react-router-dom";
-import type { CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import "./App.css";
 import { Home } from "./pages/Home";
 import { Academy } from "./pages/Academy";
+import { Register } from "./pages/Register";
 import { Coaches } from "./pages/Coaches";
 import { Players } from "./pages/Players";
 import { Programs } from "./pages/Programs";
@@ -19,11 +20,22 @@ const NAV_LINKS = [
 const PAGE_BACKGROUNDS: Record<string, string> = {
   "/": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=2200&q=85",
   "/academy": "https://images.unsplash.com/photo-1767731325176-1b4c774bd3d3?auto=format&fit=crop&w=2200&q=85",
+  "/register": "https://images.unsplash.com/photo-1767731325176-1b4c774bd3d3?auto=format&fit=crop&w=2200&q=85",
   "/coaches": "https://images.unsplash.com/photo-1775005968249-ad66e906df17?auto=format&fit=crop&w=2200&q=85",
   "/players": "https://images.unsplash.com/photo-1770937331389-e0c0549aff5d?auto=format&fit=crop&w=2200&q=85",
   "/programs": "https://images.unsplash.com/photo-1780548545759-434981c7c46e?auto=format&fit=crop&w=2200&q=85",
   "/contact": "https://images.unsplash.com/photo-1780255431682-df87de2febfa?auto=format&fit=crop&w=2200&q=85",
 };
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function Background() {
   const { pathname } = useLocation();
@@ -46,6 +58,7 @@ function AnimatedRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/academy" element={<Academy />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/coaches" element={<Coaches />} />
         <Route path="/players" element={<Players />} />
         <Route path="/programs" element={<Programs />} />
@@ -59,6 +72,8 @@ function AnimatedRoutes() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+
       <div className="page">
         <Background />
 
