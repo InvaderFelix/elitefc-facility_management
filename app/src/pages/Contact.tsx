@@ -46,13 +46,13 @@ export function Contact() {
             team — you&apos;ll need to be logged in to your account.
           </p>
         </div>
-        <Link to="/academy" className="login-callout__cta">
+        <Link to="/facility" className="login-callout__cta">
           Log in to Your Account →
         </Link>
       </section>
 
       <section className="contact-layout">
-        <div className="map-section">
+        <div>
           <Card eyebrow="Location" title="Elite Football Centre">
             <div className="card__body">
               <div className="map-container">
@@ -96,7 +96,7 @@ export function Contact() {
           </Card>
         </div>
 
-        <div className="form-section">
+        <div>
           <Card eyebrow="Message" title="Send Us a Message">
             <div className="card__body">
               <form onSubmit={handleSubmit} noValidate>

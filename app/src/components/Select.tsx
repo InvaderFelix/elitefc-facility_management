@@ -30,7 +30,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     return (
       <div className={`field ${error ? 'field--error' : ''} ${className}`.trim()}>
-        <label htmlFor={selectId} className="field__label">
+        <label htmlFor={selectId}>
           {label}
           {required && (
             <span className="field__required" aria-hidden="true">
@@ -42,7 +42,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           id={selectId}
-          className="field__input field__input--select"
+          className="field__input"
           aria-invalid={!!error}
           aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
           required={required}

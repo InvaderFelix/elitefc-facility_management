@@ -8,13 +8,15 @@ import {
   type ChangeEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 import { Card } from "../components/Card";
 import { TextInput } from "../components/TextInput";
 import { Select } from "../components/Select";
 import { Button } from "../components/Button";
 import { DateInput } from "../components/DateInput";
+import { ErrorMessage } from "../components/ErrorMessage";
+import { getSupabase } from "../lib/supabase";
 
 interface ChildDraft {
   id: number;
@@ -40,10 +42,45 @@ interface NominatimPlace {
   address?: Record<string, string>;
 }
 
-const toAddressSuggestion = (place: NominatimPlace): AddressSuggestion => {
+const STREET_NUMBER_SEGMENT = /^\d+[A-Za-z]?(?:\s*-\s*\d+[A-Za-z]?)?$/;
+const LEADING_ADDRESS_NUMBER =
+  /^\s*(?:(\d+[A-Za-z]?)\s*\/\s*)?(\d+[A-Za-z]?(?:\s*-\s*\d+[A-Za-z]?)?)/;
+
+const tidyNumber = (value: string): string => value.replace(/\s+/g, "");
+
+const extractLeadingSegmentNumber = (source: string | undefined): string => {
+  if (!source) return "";
+
+  for (const segment of source.split(",").slice(0, 2)) {
+    const candidate = segment.trim();
+    if (STREET_NUMBER_SEGMENT.test(candidate)) return tidyNumber(candidate);
+  }
+
+  return "";
+};
+
+const extractTypedNumber = (
+  source: string | undefined,
+): { unitNumber?: string; houseNumber?: string } => {
+  const match = LEADING_ADDRESS_NUMBER.exec(source ?? "");
+  if (!match) return {};
+
+  const [, unit, house] = match;
+  return {
+    unitNumber: unit ? tidyNumber(unit) : undefined,
+    houseNumber: tidyNumber(house),
+  };
+};
+
+const toAddressSuggestion = (place: NominatimPlace, query?: string): AddressSuggestion => {
   const a = place.address ?? {};
-  const unitNumber = a.unit ?? "";
-  const houseNumber = a.house_number ?? "";
+  const typed = extractTypedNumber(query);
+  const houseNumber =
+    a.house_number ||
+    extractLeadingSegmentNumber(place.display_name) ||
+    typed.houseNumber ||
+    "";
+  const unitNumber = a.unit || typed.unitNumber || "";
   const streetName = a.road ?? a.pedestrian ?? a.footway ?? "";
   const suburb = a.suburb ?? a.locality ?? a.town ?? a.city ?? a.village ?? a.municipality ?? "";
 
@@ -90,13 +127,20 @@ const TERMS_PARAGRAPHS = [
 export function Register() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
   const [firstNameError, setFirstNameError] = useState<string | undefined>();
   const [surnameError, setSurnameError] = useState<string | undefined>();
   const [emailError, setEmailError] = useState<string | undefined>();
   const [phoneError, setPhoneError] = useState<string | undefined>();
+  const [passwordError, setPasswordError] = useState<string | undefined>();
+  const [houseNumberError, setHouseNumberError] = useState<string | undefined>();
+  const [streetNameError, setStreetNameError] = useState<string | undefined>();
+  const [suburbError, setSuburbError] = useState<string | undefined>();
+  const [postcodeError, setPostcodeError] = useState<string | undefined>();
   const [children, setChildren] = useState<ChildDraft[]>([{ id: 1 }]);
   const [childErrors, setChildErrors] = useState<Record<number, ChildFieldErrors>>({});
   const [termsOpen, setTermsOpen] = useState(false);
+  const navigate = useNavigate();
   const [addressQuery, setAddressQuery] = useState("");
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
   const [showAddressSuggestions, setShowAddressSuggestions] = useState(false);
@@ -137,6 +181,42 @@ export function Register() {
 
   const validateDob = (value: string): string | undefined =>
     value === "" ? "Date of birth is required" : undefined;
+
+  const validateHouseNumber = (value: string): string | undefined => {
+    const trimmed = value.trim();
+    if (trimmed === "") return "Street number is required";
+    return /^\d+[A-Za-z]?(?:\s*-\s*\d+[A-Za-z]?)?$/.test(trimmed)
+      ? undefined
+      : "Enter a valid street number (e.g. 12 or 12A)";
+  };
+
+  const validateStreetName = (value: string): string | undefined => {
+    const trimmed = value.trim();
+    if (trimmed === "") return "Street name is required";
+    return /\d/.test(trimmed) ? "Enter a street name without a number" : undefined;
+  };
+
+  const validateSuburb = (value: string): string | undefined => {
+    const trimmed = value.trim();
+    if (trimmed === "") return "Suburb is required";
+    return /^[\p{L}\s'.-]+$/u.test(trimmed) ? undefined : "Enter a valid suburb";
+  };
+
+  const validatePostcode = (value: string): string | undefined => {
+    const trimmed = value.trim();
+    if (trimmed === "") return "Postcode is required";
+    return /^\d{4}$/.test(trimmed) ? undefined : "Enter a valid 4-digit postcode";
+  };
+
+  const handleFieldChange =
+    (
+      error: string | undefined,
+      validate: (value: string) => string | undefined,
+      setError: (error: string | undefined) => void,
+    ) =>
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (error) setError(validate(event.target.value));
+    };
 
   const handleNameBlur = (
     event: FocusEvent<HTMLInputElement>,
@@ -249,7 +329,7 @@ export function Register() {
             throw new Error(`Address lookup failed (${response.status})`);
           }
           const data = (await response.json()) as NominatimPlace[];
-          setAddressSuggestions(data.map(toAddressSuggestion));
+          setAddressSuggestions(data.map((place) => toAddressSuggestion(place, query)));
           setShowAddressSuggestions(true);
           setAddressLookupError(undefined);
         } catch (error) {
@@ -283,6 +363,11 @@ export function Register() {
     if (streetNameRef.current) streetNameRef.current.value = suggestion.streetName ?? "";
     if (suburbRef.current) suburbRef.current.value = suggestion.suburb ?? "";
     if (postcodeRef.current) postcodeRef.current.value = suggestion.postcode ?? "";
+    unitNumberRef.current?.focus();
+    setHouseNumberError(undefined);
+    setStreetNameError(undefined);
+    setSuburbError(undefined);
+    setPostcodeError(undefined);
     setAddressQuery("");
     setShowAddressSuggestions(false);
     setAddressSuggestions([]);
@@ -324,15 +409,28 @@ export function Register() {
     };
   }, [termsOpen]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    const password = String(data.get("password") ?? "");
+    const confirmPassword = String(data.get("confirmPassword") ?? "");
+
+    const passwordErr =
+      password.length < 8 ? "Use a password of at least 8 characters." : undefined;
+    const confirmErr =
+      confirmPassword !== password ? "Passwords do not match." : undefined;
 
     const errors = {
       firstName: validateName(String(data.get("firstName") ?? "")),
       surname: validateName(String(data.get("surname") ?? "")),
       email: validateEmail(String(data.get("parentEmail") ?? "")),
       phone: validatePhone(String(data.get("parentPhone") ?? "")),
+      password: passwordErr || confirmErr || undefined,
+      houseNumber: validateHouseNumber(String(data.get("houseNumber") ?? "")),
+      streetName: validateStreetName(String(data.get("streetName") ?? "")),
+      suburb: validateSuburb(String(data.get("suburb") ?? "")),
+      postcode: validatePostcode(String(data.get("postcode") ?? "")),
     };
 
     const childErrorMap: Record<number, ChildFieldErrors> = {};
@@ -348,13 +446,25 @@ export function Register() {
     setSurnameError(errors.surname);
     setEmailError(errors.email);
     setPhoneError(errors.phone);
+    setPasswordError(errors.password);
+    setHouseNumberError(errors.houseNumber);
+    setStreetNameError(errors.streetName);
+    setSuburbError(errors.suburb);
+    setPostcodeError(errors.postcode);
     setChildErrors(childErrorMap);
+    setError("");
 
     const fieldOrder: Array<[string, string | undefined]> = [
       ["firstName", errors.firstName],
       ["surname", errors.surname],
       ["parentEmail", errors.email],
       ["parentPhone", errors.phone],
+      ["password", passwordErr],
+      ["confirmPassword", confirmErr],
+      ["houseNumber", errors.houseNumber],
+      ["streetName", errors.streetName],
+      ["suburb", errors.suburb],
+      ["postcode", errors.postcode],
     ];
     for (const child of children) {
       const childErr = childErrorMap[child.id];
@@ -373,12 +483,56 @@ export function Register() {
       return;
     }
 
+    const supabase = getSupabase();
+    if (!supabase) {
+      setError("Registration is not configured yet.");
+      return;
+    }
+
     setSubmitting(true);
 
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      // Extract child data from the first child
+      const firstChild = children[0];
+      const childFirstName = String(data.get(`child-${firstChild.id}-firstName`) ?? "");
+      const childLastName = String(data.get(`child-${firstChild.id}-surname`) ?? "");
+      const childProgram = String(data.get(`child-${firstChild.id}-program`) ?? "");
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/register-account`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: String(data.get("firstName") ?? ""),
+          lastName: String(data.get("surname") ?? ""),
+          parentEmail: String(data.get("parentEmail") ?? ""),
+          parentPhone: String(data.get("parentPhone") ?? ""),
+          street: String(data.get("streetName") ?? ""),
+          suburb: String(data.get("suburb") ?? ""),
+          postcode: String(data.get("postcode") ?? ""),
+          childFirstName,
+          childLastName,
+          ageGroup: childProgram,
+          program: childProgram,
+          terms: Boolean(data.get("terms") ?? false),
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error?.message || "Could not create account.");
+        return;
+      }
+
       setDone(true);
-    }, 1000);
+      setTimeout(() => navigate("/"), 1500);
+    } catch {
+      setError("Could not create account. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -449,6 +603,26 @@ export function Register() {
                 onChange={handlePhoneChange}
               />
 
+              <TextInput
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="At least 8 characters"
+                autoComplete="new-password"
+                required
+                error={passwordError}
+              />
+
+              <TextInput
+                label="Confirm Password"
+                name="confirmPassword"
+                type="password"
+                placeholder="Re-enter password"
+                autoComplete="new-password"
+                required
+                error={passwordError}
+              />
+
               <fieldset className="register-address">
                 <legend>Address</legend>
 
@@ -457,7 +631,6 @@ export function Register() {
                   name="addressLookup"
                   type="text"
                   placeholder="Start typing your address"
-                  required
                   value={addressQuery}
                   onChange={handleAddressLookupChange}
                   onBlur={() => {
@@ -508,6 +681,12 @@ export function Register() {
                     placeholder="e.g. 12"
                     required
                     ref={houseNumberRef}
+                    error={houseNumberError}
+                    onChange={handleFieldChange(
+                      houseNumberError,
+                      validateHouseNumber,
+                      setHouseNumberError,
+                    )}
                   />
                 </div>
 
@@ -518,6 +697,12 @@ export function Register() {
                   placeholder="e.g. Smith Street"
                   required
                   ref={streetNameRef}
+                  error={streetNameError}
+                  onChange={handleFieldChange(
+                    streetNameError,
+                    validateStreetName,
+                    setStreetNameError,
+                  )}
                 />
 
                 <div className="register-address__row">
@@ -528,6 +713,8 @@ export function Register() {
                     placeholder="Suburb"
                     required
                     ref={suburbRef}
+                    error={suburbError}
+                    onChange={handleFieldChange(suburbError, validateSuburb, setSuburbError)}
                   />
 
                   <TextInput
@@ -537,6 +724,8 @@ export function Register() {
                     placeholder="3000"
                     required
                     ref={postcodeRef}
+                    error={postcodeError}
+                    onChange={handleFieldChange(postcodeError, validatePostcode, setPostcodeError)}
                   />
                 </div>
               </fieldset>
@@ -644,10 +833,11 @@ export function Register() {
                 {submitting ? "CREATING ACCOUNT..." : "Create Account"}
               </Button>
 
+              <ErrorMessage>{error}</ErrorMessage>
+
               {done && (
                 <p className="register-success">
-                  Account created (demo). You&apos;ll be able to log in once
-                  authentication is wired up. Redirecting to login...
+                  Account created. Redirecting to login...
                 </p>
               )}
             </form>

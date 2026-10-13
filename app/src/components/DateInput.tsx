@@ -26,7 +26,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
 
     return (
       <div className={`field ${error ? 'field--error' : ''} ${className}`.trim()}>
-        <label htmlFor={inputId} className="field__label">
+        <label htmlFor={inputId}>
           {label}
           {required && (
             <span className="field__required" aria-hidden="true">
@@ -39,7 +39,7 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
           ref={ref}
           id={inputId}
           type="date"
-          className="field__input field__input--date"
+          className="field__input"
           min={minDate}
           max={maxDate}
           aria-invalid={!!error}

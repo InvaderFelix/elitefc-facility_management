@@ -12,9 +12,10 @@ dist
 dist-ssr
 *.local
 
-# env
+# env (keep .env.example committed)
 .env
-.env.*.local
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*

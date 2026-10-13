@@ -1,20 +1,48 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
+import { getSupabase } from "../lib/supabase";
+import { ErrorMessage } from "../components/ErrorMessage";
 
 export function Home() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const email = String(data.get("email") ?? "").trim();
+    const password = String(data.get("password") ?? "");
+    // remember checkbox intentionally not used (persistSession default)
+
+    const supabase = getSupabase();
+    if (!supabase) {
+      setError("Authentication is not configured yet.");
+      return;
+    }
+
+    setError("");
     setIsLoggingIn(true);
 
-    setTimeout(() => {
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError(signInError.message || "Invalid email or password.");
+        return;
+      }
+
+      navigate("/academy");
+    } catch {
+      setError("We couldn't sign you in. Please try again.");
+    } finally {
       setIsLoggingIn(false);
-      alert(
-        "Demo only — connect this form to your authentication system."
-      );
-    }, 800);
+    }
   };
 
   return (
@@ -93,10 +121,12 @@ export function Home() {
                 <span>Remember me</span>
               </label>
 
-              <Link to="/contact" className="forgot">
+              <Link to="/forgot-password" className="forgot">
                 Forgot password?
               </Link>
             </div>
+
+            <ErrorMessage>{error}</ErrorMessage>
 
             <button
               type="submit"

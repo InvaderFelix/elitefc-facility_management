@@ -1,314 +1,190 @@
-import { useState, type FormEvent, type KeyboardEvent } from "react";
-import { Link } from "react-router-dom";
 import "../App.css";
 import { Card } from "../components/Card";
 
-interface ServiceCard {
-  eyebrow: string;
+interface PlayerExplainer {
+  id: string;
   title: string;
-  body: string;
-  items: string[];
-  message: string;
-  links: { to: string; label: string; variant: "primary" | "secondary" }[];
+  description: string;
+  videoId: string;
+  ageGroup: string;
 }
 
-const SERVICE_CARDS: ServiceCard[] = [
+const EXPLAINERS: PlayerExplainer[] = [
   {
-    eyebrow: "Book Courts",
-    title: "Pitch Hire",
-    body: "FIFA-grade indoor and outdoor pitches, open 7 days.",
-    items: [
-      "Indoor 7-a-side — $240 per hour",
-      "Indoor 5-a-side — $120 per hour",
-      "Outdoor 5-a-side — $110 per hour",
+    id: "1",
+    title: "First Touch Control",
+    description:
+      "Master the first touch — the most important skill in football. Learn how to receive passes under pressure and move into space.",
+    videoId: "demo1",
+    ageGroup: "U7-U10",
+  },
+  {
+    id: "2",
+    title: "Passing Accuracy",
+    description:
+      "Develop precise passing over short and long distances. Practice weight of pass and body positioning for consistent delivery.",
+    videoId: "demo2",
+    ageGroup: "U11-U14",
+  },
+  {
+    id: "3",
+    title: "Goalkeeping Fundamentals",
+    description:
+      "Basic stance, positioning, and shot-stopping techniques for aspiring goalkeepers. Build confidence between the posts.",
+    videoId: "demo3",
+    ageGroup: "All Ages",
+  },
+];
+
+interface AgeGroup {
+  id: string;
+  title: string;
+  ageRange: string;
+  description: string;
+  focus: string[];
+  entryRequirements?: string;
+}
+
+const AGE_GROUPS: AgeGroup[] = [
+  {
+    id: "1",
+    title: "Petite",
+    ageRange: "Ages 3 to 5",
+    description:
+      "Petite is where the Elite FC pathway begins. Built for our youngest players, sessions are all about fun, movement and falling in love with the ball.",
+    focus: [
+      "Fun, movement and first touch",
+      "Coordination, balance and confidence",
+      "Small groups with qualified coaches",
+      "Purpose-built indoor facility, rain or shine",
     ],
-    message:
-      "Log in to book a pitch for next session — or register if you haven't created an account yet.",
-    links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
+    entryRequirements: "No experience necessary.",
+  },
+  {
+    id: "2",
+    title: "Pre-Academy",
+    ageRange: "Ages 5 to 7",
+    description:
+      "Pre-Academy takes the fun of Petite and adds real structure. Players learn fundamentals in a way that keeps them engaged and moving — the bridge between first-time play and MiniRoos.",
+    focus: [
+      "Dribbling, passing, first touch and game sense",
+      "Structured skill sessions",
+      "Qualified coaches with youth development experience",
+      "Pathway forward into Academy / MiniRoos",
     ],
   },
   {
-    eyebrow: "Competition",
-    title: "Leagues",
-    body: "Social and competitive football all year round with live results.",
-    items: [
-      "Adult League — Monday 7-a-side social · Tuesday intermediate",
-      "Junior League — ESL summer competition",
-      "Fixtures, results & replays published live",
-    ],
-    message:
-      "Log in to enter your team into a league — or register if you haven't created an account yet.",
-    links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
+    id: "3",
+    title: "Academy",
+    ageRange: "Ages 7 to 13",
+    description:
+      "Academy is Elite FC's MiniRoos program. Small-sided football means more touches, more decisions and more time on the ball — delivered with a real curriculum.",
+    focus: [
+      "MiniRoos small-sided football",
+      "Qualified coaches and development curriculum",
+      "Moonee Valley Knights FC partnership for Football Victoria competition",
+      "Pathway to Juniors, Seniors and E360 / NPL",
+      "National tournaments and international tour opportunities",
     ],
   },
   {
-    eyebrow: "Weekends",
-    title: "Birthday Parties",
-    body: "Party packages with exclusive pitch use and our licensed cafe.",
-    items: ["Saturdays & Sundays", "Party food packages available"],
-    message:
-      "Log in to book a party, register for an account, or contact us to enquire about availability.",
-    links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
+    id: "4",
+    title: "Elite 360",
+    ageRange: "Ages 13 to 18",
+    description:
+      "Elite high-performance program for advanced players seeking professional pathways.",
+    focus: [
+      "Elite technical training",
+      "Strength & conditioning",
+      "Mental performance",
+      "Competitive match play",
     ],
-  },
-  {
-    eyebrow: "Events",
-    title: "Venue Hire",
-    body: "Hire the whole venue for events, schools, tournaments and functions.",
-    items: ["Change rooms & amenities", "Free on-site parking"],
-    message:
-      "Log in to book the venue, register for an account, or contact us to enquire about your event.",
-    links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
-    ],
-  },
-  {
-    eyebrow: "Members",
-    title: "Gym Access",
-    body: "A fully equipped strength and conditioning space for footballers.",
-    items: ["Performance gym", "Bookable for your own training"],
-    message:
-      "Log in to book the gym, register for an account, or contact us to enquire about membership.",
-    links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
-    ],
-  },
-  {
-    eyebrow: "All Week",
-    title: "Cafe & Licensed Bar",
-    body: "Coffee, food and licensed bar for players, parents and spectators.",
-    items: ["Monday–Friday 8am–8pm", "Saturday–Sunday 8am–9pm"],
-    message:
-      "Log in to book the cafe space, register for an account, or contact us to enquire about functions.",
-    links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
-    ],
+    entryRequirements:
+      "Trial and selection required. Partnership with Moonee Valley Knights FC.",
   },
 ];
 
 export function Academy() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [openCard, setOpenCard] = useState<number | null>(null);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoggedIn(true);
-  };
-
-  const toggleCard = (index: number) => {
-    setOpenCard((current) => (current === index ? null : index));
-  };
-
-  const handleCardKey = (
-    event: KeyboardEvent<HTMLElement>,
-    index: number
-  ) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      toggleCard(index);
-    }
-  };
-
   return (
     <main className="content">
-      <section className="hero-split">
-        <section className="hero">
-          <div className="eyebrow">ACADEMY</div>
+      <section className="hero">
+        <div className="eyebrow">ACADEMY</div>
 
-          <h1>
-            Local Facility
-            <span>Elite Training</span>
-          </h1>
+        <h1>
+          Player Development
+          <span>Pathway</span>
+        </h1>
 
-          <p className="hero-description">
-            Structured training programs for players aged 7-18. Technical
-            development, tactical awareness, and physical progression in a
-            purpose-built facility.
-          </p>
-        </section>
-
-        <section className="login-card">
-          <div className="card-header">
-            <div className="card-title">
-              Academy
-              <br />
-              <span>One Login Access</span>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="email">Email / Username</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                autoComplete="email"
-                required
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                required
-              />
-            </div>
-
-            <div className="form-options">
-              <label className="remember">
-                <input type="checkbox" id="remember" />
-                <span>Remember me</span>
-              </label>
-
-              <Link to="/contact" className="forgot">
-                Forgot password?
-              </Link>
-            </div>
-
-            <button type="submit" className="login-button">
-              LOG IN
-            </button>
-          </form>
-
-          <div className="divider" />
-
-          <div className="join">
-            New to Elite? &nbsp;
-            <Link to="/register">Join the Academy →</Link>
-          </div>
-        </section>
+        <p className="hero-description">
+          Petite, Pre-Academy, and Academy — a defined pathway from first touch to competitive football.
+        </p>
       </section>
 
       <section className="academy-services">
         <div className="section-heading">
-          <div className="eyebrow">FACILITY SERVICES</div>
-          <h2>Everything Under One Roof</h2>
+          <div className="eyebrow">DEVELOPMENT PATHWAYS</div>
+          <h2>Find the Right Stage</h2>
           <p>
-            From pitch hire and birthday parties to leagues, gym and cafe —
-            book the whole facility, or any part of it, in Maribyrnong.
+            Structured pathways from first touch to high-performance football,
+            aligned with Elite Football Centre's programs.
           </p>
         </div>
 
-        <div className="services-grid">
-          {SERVICE_CARDS.map((card, index) => {
-            const isOpen = openCard === index;
+        <div className="cards-grid">
+          {AGE_GROUPS.map((group) => (
+            <details className="program-panel" key={group.id}>
+              <summary>
+                <span className="program-title">{group.title}</span>
+                <span className="program-age">{group.ageRange}</span>
+                <span className="program-chevron" aria-hidden="true">
+                  +
+                </span>
+              </summary>
 
-            return (
-              <article
-                key={card.title}
-                className={`card services-card ${
-                  isOpen ? "services-card--open" : ""
-                }`}
-                onClick={() => toggleCard(index)}
-                onKeyDown={(event) => handleCardKey(event, index)}
-                role="button"
-                tabIndex={0}
-                aria-expanded={isOpen}
-              >
-                <div className="card__header">
-                  <span className="card__eyebrow">{card.eyebrow}</span>
-                  <h2 className="card__title">{card.title}</h2>
-                </div>
+              <div className="program-content">
+                <p>{group.description}</p>
 
-                <div className="card__body">
-                  <p>{card.body}</p>
-                  <ul>
-                    {card.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
+                <ul>
+                  {group.focus.map((focus) => (
+                    <li key={focus}>{focus}</li>
+                  ))}
+                </ul>
 
-                <div className="services-card__overlay">
-                  <div className="services-card__content">
-                    <h3 className="services-card__title">{card.title}</h3>
-                    <p className="services-card__message">{card.message}</p>
-
-                    <div className="services-card__actions">
-                      {card.links.map((link) => (
-                        <Link
-                          key={link.to + link.label}
-                          to={link.to}
-                          className={`btn btn--${link.variant}`}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
+                {group.entryRequirements && (
+                  <p className="program-entry">{group.entryRequirements}</p>
+                )}
+              </div>
+            </details>
+          ))}
         </div>
       </section>
 
-      {isLoggedIn && (
-        <section className="booking-info">
-          <Card eyebrow="Bookings" title="Facility Bookings">
+      <section className="cards-grid">
+        {EXPLAINERS.map((explainer) => (
+          <Card
+            key={explainer.id}
+            title={explainer.title}
+            eyebrow={explainer.ageGroup}
+          >
             <div className="card__body">
-              <p>
-                Book courts, gym sessions, and pitch bookings through the
-                member portal. Select your preferred date, time, and session
-                type below.
-              </p>
+              <div className="video-placeholder">
+                <iframe
+                  width="100%"
+                  height="180"
+                  src={`https://www.youtube.com/embed/${explainer.videoId}?rel=0&controls=1`}
+                  title={explainer.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
 
-              <details>
-                <summary>Available Facilities</summary>
-                <ul>
-                  <li>Senior Pitch (Full-size)</li>
-                  <li>Junior Pitch (MiniRoos)</li>
-                  <li>Gym Area</li>
-                  <li>Indoor Training Zone</li>
-                </ul>
-              </details>
+              <h3 className="explainer-title">{explainer.title}</h3>
 
-              <details>
-                <summary>Booking Rules</summary>
-                <ul>
-                  <li>Members must be logged in to book</li>
-                  <li>Cancellations within 24 hours incur a fee</li>
-                  <li>Peak times subject to availability</li>
-                </ul>
-              </details>
+              <p className="explainer-desc">{explainer.description}</p>
             </div>
           </Card>
-
-          <Card eyebrow="Schedule" title="Training Schedule">
-            <div className="card__body">
-              <p>
-                View and manage your player&apos;s training sessions and match
-                fixtures throughout the season.
-              </p>
-
-              <ul>
-                <li>Weekly skill sessions</li>
-                <li>Match day rotations</li>
-                <li>Goalkeeper-specific training</li>
-                <li>Fitness and conditioning</li>
-              </ul>
-            </div>
-          </Card>
-        </section>
-      )}
+        ))}
+      </section>
     </main>
   );
 }

@@ -21,7 +21,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     return (
       <div className={`field ${error ? 'field--error' : ''} ${className}`.trim()}>
-        <label htmlFor={inputId} className="field__label">
+        <label htmlFor={inputId}>
           {label}
           {required && (
             <span className="field__required" aria-hidden="true">

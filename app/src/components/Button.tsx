@@ -51,13 +51,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && <span className="btn__spinner" aria-hidden="true" />}
         {!isLoading && leftIcon && (
-          <span className="btn__icon btn__icon--left" aria-hidden="true">
+          <span className="btn__icon" aria-hidden="true">
             {leftIcon}
           </span>
         )}
-        <span className="btn__label">{children}</span>
+        <span>{children}</span>
         {!isLoading && rightIcon && (
-          <span className="btn__icon btn__icon--right" aria-hidden="true">
+          <span className="btn__icon" aria-hidden="true">
             {rightIcon}
           </span>
         )}

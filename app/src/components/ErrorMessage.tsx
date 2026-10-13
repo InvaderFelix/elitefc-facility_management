@@ -17,7 +17,7 @@ export function ErrorMessage({ children, className = '', ...rest }: ErrorMessage
       <span className="error-message__icon" aria-hidden="true">
         !
       </span>
-      <span className="error-message__text">{children}</span>
+      <span>{children}</span>
     </p>
   );
 }
