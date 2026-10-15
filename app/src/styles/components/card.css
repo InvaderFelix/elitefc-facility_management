@@ -1,0 +1,62 @@
+@layer components {
+  .card {
+    padding: 28px;
+
+    background: rgba(9, 13, 10, 0.85);
+
+    border: 1px solid var(--border);
+  }
+
+  .card__header {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 26px;
+  }
+
+  .card__eyebrow {
+    color: var(--red);
+
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .card__title {
+    margin: 0;
+
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .card__body {
+    color: #aeb4ae;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  .card__body ul {
+    padding-left: 20px;
+  }
+
+  .card__body > :first-child {
+    margin-top: 0;
+  }
+
+  .card__body > :last-child {
+    margin-bottom: 0;
+  }
+
+  .card__footer {
+    margin-top: 22px;
+    padding-top: 18px;
+
+    border-top: 1px solid var(--border);
+  }
+}

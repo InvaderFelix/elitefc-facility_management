@@ -1,4 +1,3 @@
-import "../../App.css";
 import { Card } from "../../components/Card";
 import { useAuth } from "../../lib/useAuth";
 

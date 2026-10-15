@@ -1,0 +1,20 @@
+@layer components {
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    align-items: start;
+  }
+
+  .cards-grid > *,
+  .contact-layout > *,
+  .services-grid > * {
+    min-width: 0;
+  }
+
+  @media (max-width: 480px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

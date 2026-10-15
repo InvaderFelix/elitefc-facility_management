@@ -28,6 +28,7 @@ logs/
 # OS files
 .DS_Store
 Thumbs.db
+*:Zone.Identifier
 
 # Test coverage
 coverage/

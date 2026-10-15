@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import "../App.css";
 import { Card } from "../components/Card";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 import { ErrorMessage } from "../components/ErrorMessage";
+import { PageHero } from "../components/PageHero";
 import { getSupabase } from "../lib/supabase";
 
 export function ForgotPassword() {
@@ -60,19 +60,12 @@ export function ForgotPassword() {
 
   return (
     <main className="content">
-      <section className="hero">
-        <div className="eyebrow">ACCOUNT RECOVERY</div>
-
-        <h1>
-          Forgot Your
-          <span>Password</span>
-        </h1>
-
-        <p className="hero-description">
-          Enter the email address on your account and we&apos;ll send you a
-          secure link to set a new password.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="ACCOUNT RECOVERY"
+        title="Forgot Your"
+        accent="Password"
+        description="Enter the email address on your account and we'll send you a secure link to set a new password."
+      />
 
       <section className="register-layout">
         <Card eyebrow="Reset Password" title="Request a Reset Link">

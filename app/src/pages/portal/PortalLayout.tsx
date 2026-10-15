@@ -1,6 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import "../../App.css";
-import { useAuth } from "../../lib/useAuth";
+import "../../styles/pages/portal.css";
 import { PORTAL_NAV, type PortalNavItem } from "./portalNav";
 
 /* Overview/Dashboard first, Settings last, everything else A–Z. */
@@ -24,19 +23,8 @@ function navOrder(a: PortalNavItem, b: PortalNavItem) {
  * instead of showing all of them.
  */
 export function PortalLayout() {
-  const { person } = useAuth();
-  const name = person?.preferred_name ?? person?.first_name ?? "Member";
-
   return (
     <main className="content">
-      <section className="hero">
-        <div className="eyebrow">Member Portal</div>
-        <h1>
-          {name}
-          <span>Portal</span>
-        </h1>
-      </section>
-
       <div className="portal">
         <aside className="portal__nav">
           {PORTAL_NAV.map((section) => (

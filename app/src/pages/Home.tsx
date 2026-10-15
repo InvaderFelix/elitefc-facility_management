@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../App.css";
 import { getSupabase } from "../lib/supabase";
 import { ErrorMessage } from "../components/ErrorMessage";
+import { PageHero } from "../components/PageHero";
 
 export function Home() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -54,19 +54,12 @@ export function Home() {
       />
 
       <section className="hero-split">
-        <section className="hero">
-          <div className="eyebrow">Player &amp; Parent Portal</div>
-
-          <h1>
-            Become
-            <span>Elite</span>
-          </h1>
-
-          <p className="hero-description">
-            Your football journey starts here. Access your training, fixtures,
-            development progress and Academy updates from one place.
-          </p>
-
+        <PageHero
+          eyebrow="Player & Parent Portal"
+          title="Become"
+          accent="Elite"
+          description="Your football journey starts here. Access your training, fixtures, development progress and Academy updates from one place."
+        >
           <div className="stats">
             <div className="stat">
               <strong>01</strong>
@@ -85,7 +78,7 @@ export function Home() {
               <small>Compete</small>
             </div>
           </div>
-        </section>
+        </PageHero>
 
         <section className="login-card">
           <div className="card-header">

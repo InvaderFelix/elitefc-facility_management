@@ -31,8 +31,8 @@ No test runner is configured yet. No CI workflows exist.
 ## Frontend structure
 
 - **Shell**: `app/src/App.tsx` owns the shared layout (background, header/logo/nav, footer) and all routes via `react-router-dom` (`BrowserRouter`). Page components in `app/src/pages/` render `<main className="content">` and are dropped into the shared shell.
-- **Styling**: everything lives in the single `app/src/App.css` stylesheet (no CSS modules). Layout is fluid — `clamp()` for fluid sizing, media queries at `850px`/`480px`/`360px`, `hero-split` two-column rows that stack below `1120px`. Keep new pages consistent with these classes rather than adding bespoke ones.
-- **Components**: reusable primitives in `app/src/components/` (`Button`, `Card`, `TextInput`, `Select`, `DateInput`, `Checkbox`, `ErrorMessage`) emit BEM-style classes (`btn`, `field__input`, `card__header`) that are styled centrally in `App.css`.
+- **Styling**: split across `app/src/styles/` (no CSS modules). `styles/index.ts` is the global barrel imported once by `main.tsx`; it pulls in `layers.css` (Google Fonts `@import` + the `@layer` order), `reset.css`, `tokens.css` (colors + `--radius-sm`), `base.css` (html/body, background, main, footer, divider), `layout.css` (header/nav/hero/stats), `components/*` (button, card, fields, auth-card, grid) and `content/content.css` (shared marketing sections: `academy-services`, `section-heading`, `services-grid`, `program-panel`, `faq`, `login-callout`). Page-specific rules live in `styles/pages/*` and are imported by the page itself (`coaches`, `register`, `contact`, `booking`, `portal`) so they can be code-split later. Everything is wrapped in the cascade layers `reset, tokens, base, layout, components, content, pages` — keep responsive overrides co-located with their base rule (page layer always wins), and put shared values in `tokens.css`.
+- **Components**: reusable primitives in `app/src/components/` (`Button`, `Card`, `TextInput`, `Select`, `DateInput`, `Checkbox`, `ErrorMessage`) emit BEM-style classes (`btn`, `field__input`, `card__header`) styled in `styles/components/`.
 
 ## Architecture
 
@@ -47,7 +47,7 @@ Edge Functions use service-role keys after validating the requesting user's iden
 - Many files are empty stubs (components, edge functions, docs). This is expected — the project is in early development. `supabase/functions/*/index.ts` are empty; `shared/` (`errors.ts`, `responses.ts`, `validation.ts`) has the helpers to build on.
 - The login forms on `/` and `/academy` are demo-only (client-side state, no Supabase wiring yet). The app has no `.env` config; Supabase URL + anon key are not yet wired (see TODO).
 - The `app/` directory was scaffolded from the Vite React-TS template — `app/README.md` is boilerplate, not project documentation.
-- Contact form, Academy booking cards, and Players video cards use the `Card` component — its BEM styles (`.card`, `.card__header`, etc.) live in `App.css`.
+- Contact form, Academy booking cards, and Players video cards use the `Card` component — its BEM styles (`.card`, `.card__header`, etc.) live in `styles/components/card.css`.
 - `BrowserRouter` is used — client-side routes need an SPA rewrite on any static host (Vercel).
 
 ## Deployment (planned)

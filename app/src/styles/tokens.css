@@ -1,0 +1,16 @@
+@layer tokens {
+  :root {
+    --black: #060806;
+    --dark: #0c100d;
+    --red: #d32b2a;
+    --red-hover: #ff2b2a;
+    --white: #ffffff;
+    --muted: #9ba19b;
+    --border: rgba(255, 255, 255, 0.13);
+
+    --radius-sm: 6px;
+
+    /* Breakpoints (documentation only — media queries can't read custom props):
+       xs 360px · sm 480px · md 560px · lg 850px · xl 980px */
+  }
+}

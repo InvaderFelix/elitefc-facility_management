@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import "../App.css";
+import "../styles/pages/contact.css";
 import { Card } from "../components/Card";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
+import { PageHero } from "../components/PageHero";
 
 export function Contact() {
   const [submitting, setSubmitting] = useState(false);
@@ -22,19 +23,12 @@ export function Contact() {
 
   return (
     <main className="content">
-      <section className="hero">
-        <div className="eyebrow">CONTACT</div>
-
-        <h1>
-          Get in Touch
-          <span>Let&apos;s Connect</span>
-        </h1>
-
-        <p className="hero-description">
-          Questions about programs, bookings, or trials? Send us a message and
-          our team will respond within 24 hours.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="CONTACT"
+        title="Get in Touch"
+        accent="Let's Connect"
+        description="Questions about programs, bookings, or trials? Send us a message and our team will respond within 24 hours."
+      />
 
       <section className="login-callout">
         <div className="login-callout__body">

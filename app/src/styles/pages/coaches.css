@@ -1,0 +1,473 @@
+@layer pages {
+  /* ---- Portrait tile (clickable card) ---- */
+
+  .coach-tile {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+
+    padding: 0;
+
+    border: 1px solid var(--border);
+
+    background: rgba(255, 255, 255, 0.05);
+
+    cursor: pointer;
+
+    text-align: left;
+
+    color: inherit;
+
+    font: inherit;
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .coach-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  .coach-tile:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+  }
+
+  .coach-tile__open {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+
+    z-index: 3;
+
+    padding: 7px 12px;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    color: var(--white);
+
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+
+    backdrop-filter: blur(4px);
+
+    pointer-events: none;
+  }
+
+  .coach-tile__img {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform 0.4s ease;
+  }
+
+  .coach-tile:hover .coach-tile__img {
+    transform: scale(1.05);
+  }
+
+  .coach-tile__img--placeholder {
+    display: grid;
+    place-items: center;
+
+    background:
+      radial-gradient(circle at 30% 25%, rgba(211, 43, 42, 0.3), transparent 60%),
+      rgba(255, 255, 255, 0.05);
+
+    color: var(--muted);
+
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+  }
+
+  .coach-tile::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    box-shadow:
+      inset 0 0 0 1px rgba(6, 8, 6, 1),
+      inset 0 26px 30px rgb(0 0 0 / 0.95),
+      inset 0 -26px 30px rgb(0 0 0 / 0.95),
+      inset 0 0 20px rgb(0 0 0 / 0.95);
+  }
+
+  .coach-tile__label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 34px 18px 18px;
+
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  }
+
+  .coach-tile .coach-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .coach-name__first {
+    display: block;
+
+    color: var(--white);
+  }
+
+  .coach-name__last {
+    display: block;
+
+    color: var(--red);
+  }
+
+  .coach-tile .coach-role {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ---- Coach lightbox ---- */
+
+  .coach-lightbox {
+    position: fixed;
+    inset: 0;
+
+    z-index: 100;
+
+    display: grid;
+    place-items: center;
+
+    padding: 24px;
+
+    background: rgba(3, 4, 3, 0.78);
+
+    backdrop-filter: blur(6px);
+
+    opacity: 0;
+
+    transition: opacity 0.25s ease;
+  }
+
+  .coach-lightbox--open {
+    opacity: 1;
+  }
+
+  .coach-lightbox__panel {
+    position: relative;
+
+    display: flex;
+
+    width: min(60vw, 900px);
+
+    height: min(78vh, 640px);
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+
+    background: rgba(9, 13, 10, 0.98);
+
+    color: var(--white);
+
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7);
+
+    transform: scale(0.95) translateY(12px);
+
+    transition: transform 0.25s ease;
+  }
+
+  .coach-lightbox--open .coach-lightbox__panel {
+    transform: scale(1) translateY(0);
+  }
+
+  .coach-lightbox__photo,
+  .coach-lightbox__meta {
+    animation: coach-content-in 0.3s ease;
+  }
+
+  @keyframes coach-content-in {
+    from {
+      opacity: 0;
+      transform: translateX(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .coach-lightbox__photo {
+    position: relative;
+
+    flex: 0 0 42%;
+
+    min-width: 0;
+
+    overflow: hidden;
+  }
+
+  .coach-lightbox__img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+  }
+
+  .coach-lightbox__img--placeholder {
+    display: grid;
+    place-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    background:
+      radial-gradient(circle at 30% 25%, rgba(211, 43, 42, 0.25), transparent 60%),
+      rgba(255, 255, 255, 0.05);
+
+    color: var(--muted);
+
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 60px;
+    font-weight: 900;
+  }
+
+  .coach-lightbox__photo::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 30%,
+      rgba(0, 0, 0, 0.55) 65%,
+      rgba(9, 13, 10, 0.98) 100%
+    );
+  }
+
+  .coach-lightbox__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+
+    z-index: 2;
+
+    display: grid;
+    place-items: center;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    color: var(--white);
+
+    cursor: pointer;
+
+    font-size: 16px;
+    line-height: 1;
+
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .coach-lightbox__close:hover {
+    background: rgba(0, 0, 0, 0.85);
+    transform: rotate(90deg);
+  }
+
+  .coach-lightbox__nav {
+    position: fixed;
+    top: 50%;
+
+    z-index: 3;
+
+    display: grid;
+    place-items: center;
+
+    width: clamp(42px, 5vw, 54px);
+    height: clamp(58px, 7vh, 72px);
+
+    padding: 0;
+
+    transform: translateY(-50%);
+
+    background: rgba(0, 0, 0, 0.55);
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    color: var(--white);
+
+    cursor: pointer;
+
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1;
+
+    transition:
+      background 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .coach-lightbox__nav--prev {
+    left: clamp(8px, 2vw, 24px);
+  }
+
+  .coach-lightbox__nav--next {
+    right: clamp(8px, 2vw, 24px);
+  }
+
+  .coach-lightbox__nav:hover {
+    background: rgba(211, 43, 42, 0.85);
+    color: #080a08;
+  }
+
+  .coach-lightbox__meta {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: clamp(20px, 3vw, 34px);
+
+    overflow-y: auto;
+
+    scrollbar-width: none;
+  }
+
+  .coach-lightbox__meta::-webkit-scrollbar {
+    display: none;
+  }
+
+  .coach-lightbox__meta .coach-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .coach-lightbox__meta .coach-role {
+    display: block;
+
+    margin-top: 12px;
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
+  .coach-lightbox__divider {
+    height: 1px;
+
+    margin: 18px 0;
+
+    background: var(--border);
+  }
+
+  .coach-lightbox__specialty {
+    color: var(--red);
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .coach-lightbox__experience {
+    margin: 8px 0 14px;
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
+  .coach-lightbox__bio {
+    color: #c5cac5;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 850px) {
+    .coach-lightbox__panel {
+      flex-direction: column;
+
+      width: min(92vw, 480px);
+
+      height: min(80vh, 720px);
+    }
+
+    .coach-lightbox__photo {
+      flex: 0 0 40%;
+
+      max-height: 40%;
+    }
+
+    .coach-lightbox__photo::after {
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 30%,
+        rgba(0, 0, 0, 0.55) 65%,
+        rgba(9, 13, 10, 0.98) 100%
+      );
+    }
+  }
+}

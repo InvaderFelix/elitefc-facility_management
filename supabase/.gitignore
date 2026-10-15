@@ -1,0 +1,8 @@
+# Supabase
+.branches
+.temp
+
+# Secrets (keep committed examples)
+.env
+.env.*
+!.env.example

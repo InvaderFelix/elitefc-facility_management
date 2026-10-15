@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../App.css";
 import { Card } from "../components/Card";
 import { TextInput } from "../components/TextInput";
 import { Button } from "../components/Button";
 import { ErrorMessage } from "../components/ErrorMessage";
+import { PageHero } from "../components/PageHero";
 import { getSupabase } from "../lib/supabase";
 
 type LinkStatus = "checking" | "ready" | "expired" | "unavailable";
@@ -104,19 +104,12 @@ export function ResetPassword() {
 
   return (
     <main className="content">
-      <section className="hero">
-        <div className="eyebrow">ACCOUNT RECOVERY</div>
-
-        <h1>
-          Set a New
-          <span>Password</span>
-        </h1>
-
-        <p className="hero-description">
-          Choose a new password for your Elite account. You&apos;ll be signed in
-          once it&apos;s been saved.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="ACCOUNT RECOVERY"
+        title="Set a New"
+        accent="Password"
+        description="Choose a new password for your Elite account. You'll be signed in once it's been saved."
+      />
 
       <section className="register-layout">
         <Card eyebrow="Reset Password" title="Choose a New Password">
