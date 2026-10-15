@@ -61,6 +61,12 @@ interface BlockedSlot {
   label: string;
 }
 
+interface CourtRange {
+  start: number;
+  end: number;
+  complete: boolean;
+}
+
 function getDay(date: Date) {
   return date.getDay(); // 0 Sun, 1 Mon, 2 Tue, 3 Wed, 4 Thu, 5 Fri, 6 Sat
 }
@@ -107,11 +113,38 @@ function getBlockedSlots(date: Date): BlockedSlot[] {
   return blocked;
 }
 
+function extendRange(
+  courtId: string,
+  anchor: number,
+  slotStart: number,
+  slotEnd: number,
+  isSlotBlocked: (courtId: string, start: number, end: number) => boolean
+) {
+  const rawStart = Math.min(anchor, slotStart);
+  const rawEnd = Math.max(anchor + INTERVAL, slotEnd);
+
+  // Keep the range continuous by stopping at the first blocked slot.
+  let end = anchor + INTERVAL;
+  for (let m = end; m < rawEnd; m += INTERVAL) {
+    if (isSlotBlocked(courtId, m, m + INTERVAL)) break;
+    end = m + INTERVAL;
+  }
+  let start = anchor;
+  for (let m = anchor - INTERVAL; m >= rawStart; m -= INTERVAL) {
+    if (isSlotBlocked(courtId, m, m + INTERVAL)) break;
+    start = m;
+  }
+
+  return { start, end };
+}
 
 export function Booking() {
   const today = new Date();
   const [date, setDate] = useState(today);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [ranges, setRanges] = useState<Record<string, CourtRange>>({});
+  const [hover, setHover] = useState<{ courtId: string; start: number; end: number } | null>(
+    null
+  );
 
   const isToday = dateKey(date) === dateKey(today);
   const blockedSlots = getBlockedSlots(date);
@@ -122,54 +155,39 @@ export function Booking() {
     return blockedSlots.find((b) => b.courtId === courtId && !(end <= b.start || start >= b.end))?.label;
   };
 
-  const toggleSlot = (courtId: string, timeLabel: string) => {
-    const { start, end } = parseLabel(timeLabel);
-    if (isSlotBlocked(courtId, start, end)) return;
-    const slot = `${courtId}|${timeLabel}`;
+  const selectSlot = (courtId: string, slotStart: number, slotEnd: number) => {
+    if (isSlotBlocked(courtId, slotStart, slotEnd)) return;
 
-    setSelected((current) => {
-      const courtSlots = current
-        .map((item) => {
-          const [id, label] = item.split("|");
-          return id === courtId ? { slot: item, ...parseLabel(label) } : null;
-        })
-        .filter((item): item is { slot: string; start: number; end: number } => item !== null)
-        .sort((a, b) => a.start - b.start);
+    setRanges((prev) => {
+      const current = prev[courtId];
 
-      const isSelected = courtSlots.some((item) => item.slot === slot);
-
-      if (isSelected) {
-        if (courtSlots.length === 1) {
-          return current.filter((item) => item !== slot);
-        }
-        const first = courtSlots[0];
-        const last = courtSlots[courtSlots.length - 1];
-        if (start === first.start) {
-          return current.filter((item) => item !== first.slot);
-        }
-        if (start === last.start) {
-          return current.filter((item) => item !== last.slot);
-        }
-        // Interior slot: trim the block from this time onward.
-        const remove = new Set(
-          courtSlots.filter((item) => item.start >= start).map((item) => item.slot)
-        );
-        return current.filter((item) => !remove.has(item));
+      // First click, or a fresh range after the previous one was completed.
+      if (!current || current.complete) {
+        return {
+          ...prev,
+          [courtId]: { start: slotStart, end: slotEnd, complete: false },
+        };
       }
 
-      if (courtSlots.length === 0) {
-        return [...current, slot];
-      }
+      // Second click: the clicked slot sets the end of the range.
+      const { start, end } = extendRange(
+        courtId,
+        current.start,
+        slotStart,
+        slotEnd,
+        isSlotBlocked
+      );
 
-      const first = courtSlots[0];
-      const last = courtSlots[courtSlots.length - 1];
-      const adjacent = end === first.start || start === last.end;
-      if (adjacent) {
-        return [...current, slot];
-      }
-      return current;
+      return { ...prev, [courtId]: { start, end, complete: true } };
     });
   };
+
+  const selected: string[] = [];
+  for (const [courtId, range] of Object.entries(ranges)) {
+    for (let m = range.start; m < range.end; m += INTERVAL) {
+      selected.push(`${courtId}|${minutesToLabel(m)}-${minutesToLabel(m + INTERVAL)}`);
+    }
+  }
 
   const changeDate = (amount: number) => {
     setDate((current) => {
@@ -180,7 +198,7 @@ export function Booking() {
       if (next < t) return current;
       return next;
     });
-    setSelected([]);
+    setRanges({});
   };
 
   const selectedSlots = selected
@@ -310,7 +328,7 @@ export function Booking() {
                     todayMid.setHours(12, 0, 0, 0);
                     if (newDate < todayMid) return;
                     setDate(newDate);
-                    setSelected([]);
+                    setRanges({});
                   }}
                   max="2100-12-31"
                   min={new Date().toISOString().split("T")[0]}
@@ -325,7 +343,7 @@ export function Booking() {
                 size="sm"
                 onClick={() => {
                   setDate(today);
-                  setSelected([]);
+                  setRanges({});
                 }}
                 disabled={isToday}
               >
@@ -350,9 +368,14 @@ export function Booking() {
           <div
             className="booking-grid"
             style={{ "--courts": COURTS.length } as CSSProperties}
+            onMouseLeave={() => setHover(null)}
           >
             {COURTS.map((court) => (
-              <div className="booking-cell booking-cell--head" key={court.id}>
+              <div
+                className="booking-cell booking-cell--head"
+                key={court.id}
+                onMouseEnter={() => setHover(null)}
+              >
                 <span className="booking-cell__court">{court.name}</span>
                 <span className="booking-cell__type">{court.type} · ${court.pricePerHour.toFixed(0)}/hr</span>
               </div>
@@ -367,16 +390,68 @@ export function Booking() {
                   const end1 = mins + INTERVAL;
                   const start2 = mins + INTERVAL;
                   const end2 = mins + INTERVAL * 2;
-                  const slot1 = `${minutesToLabel(start1)}-${minutesToLabel(end1)}`;
-                  const slot2 = `${minutesToLabel(start2)}-${minutesToLabel(end2)}`;
-                  const key1 = `${court.id}|${slot1}`;
-                  const key2 = `${court.id}|${slot2}`;
+                  const key1 = `${court.id}|${minutesToLabel(start1)}-${minutesToLabel(end1)}`;
+                  const key2 = `${court.id}|${minutesToLabel(start2)}-${minutesToLabel(end2)}`;
                   const blocked1 = isSlotBlocked(court.id, start1, end1);
                   const blocked2 = isSlotBlocked(court.id, start2, end2);
-                  const active1 = selected.includes(key1) && !blocked1;
-                  const active2 = selected.includes(key2) && !blocked2;
-                  const label1 = blocked1 ? (getBlockLabel(court.id, start1, end1) || "Blocked") : minutesToLabel(start1);
-                  const label2 = blocked2 ? (getBlockLabel(court.id, start2, end2) || "Blocked") : minutesToLabel(start2);
+                  const selected1 = selected.includes(key1) && !blocked1;
+                  const selected2 = selected.includes(key2) && !blocked2;
+
+                  const activeRange = ranges[court.id];
+                  const preview =
+                    activeRange && !activeRange.complete
+                      ? hover && hover.courtId === court.id
+                        ? extendRange(
+                            court.id,
+                            activeRange.start,
+                            hover.start,
+                            hover.end,
+                            isSlotBlocked
+                          )
+                        : { start: activeRange.start, end: activeRange.end }
+                      : null;
+                  const anchorStart =
+                    activeRange && !activeRange.complete ? activeRange.start : null;
+
+                  const slotState = (
+                    start: number,
+                    end: number,
+                    blocked: boolean,
+                    isSelected: boolean
+                  ) => {
+                    const blockLabel = blocked
+                      ? getBlockLabel(court.id, start, end) || "Blocked"
+                      : undefined;
+                    const inPreview =
+                      !!preview && !blocked && start >= preview.start && end <= preview.end;
+                    const isHovered =
+                      !!preview && hover?.courtId === court.id && hover.start === start;
+
+                    let content: string;
+                    if (blocked) {
+                      content = blockLabel || "";
+                    } else if (isHovered && preview) {
+                      content = `Book from ${minutesToLabel(preview.start)} to ${minutesToLabel(
+                        preview.end
+                      )}`;
+                    } else if (inPreview && start !== anchorStart) {
+                      content = "";
+                    } else {
+                      content = minutesToLabel(start);
+                    }
+
+                    const className = `booking-slot${
+                      blocked ? " booking-slot--blocked" : ""
+                    }${isSelected ? " booking-slot--selected" : ""}${
+                      inPreview ? " booking-slot--preview" : ""
+                    }${isHovered ? " booking-slot--range" : ""}`;
+
+                    return { content, className, blockLabel };
+                  };
+
+                  const s1 = slotState(start1, end1, blocked1, selected1);
+                  const s2 = slotState(start2, end2, blocked2, selected2);
+
                   return (
                     <div
                       className="booking-cell booking-cell--slots"
@@ -385,27 +460,25 @@ export function Booking() {
                       <div className="booking-slots">
                         <button
                           type="button"
-                          className={`booking-slot${
-                            blocked1 ? " booking-slot--blocked" : ""
-                          }${active1 ? " booking-slot--selected" : ""}`}
-                          aria-pressed={active1}
-                          onClick={() => toggleSlot(court.id, slot1)}
+                          className={s1.className}
+                          aria-pressed={selected1}
+                          onClick={() => selectSlot(court.id, start1, end1)}
+                          onMouseEnter={() => setHover({ courtId: court.id, start: start1, end: end1 })}
                           disabled={blocked1}
-                          title={blocked1 ? label1 : undefined}
+                          title={s1.blockLabel}
                         >
-                          {label1}
+                          {s1.content}
                         </button>
                         <button
                           type="button"
-                          className={`booking-slot${
-                            blocked2 ? " booking-slot--blocked" : ""
-                          }${active2 ? " booking-slot--selected" : ""}`}
-                          aria-pressed={active2}
-                          onClick={() => toggleSlot(court.id, slot2)}
+                          className={s2.className}
+                          aria-pressed={selected2}
+                          onClick={() => selectSlot(court.id, start2, end2)}
+                          onMouseEnter={() => setHover({ courtId: court.id, start: start2, end: end2 })}
                           disabled={blocked2}
-                          title={blocked2 ? label2 : undefined}
+                          title={s2.blockLabel}
                         >
-                          {label2}
+                          {s2.content}
                         </button>
                       </div>
                     </div>
@@ -478,7 +551,7 @@ export function Booking() {
               type="button"
               variant="ghost"
               fullWidth
-              onClick={() => setSelected([])}
+              onClick={() => setRanges({})}
               disabled={selectedSlots.length === 0}
             >
               Clear

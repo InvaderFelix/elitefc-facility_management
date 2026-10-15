@@ -24,7 +24,8 @@ const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book a pitch for next session — or register if you haven't created an account yet.",
     links: [
-      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/booking", label: "Book a Pitch", variant: "primary" },
+      { to: "/", label: "Log in", variant: "secondary" },
       { to: "/register", label: "Register", variant: "secondary" },
     ],
   },
@@ -52,9 +53,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book a party, register for an account, or contact us to enquire about availability.",
     links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "primary" },
     ],
   },
   {
@@ -65,9 +64,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book the venue, register for an account, or contact us to enquire about your event.",
     links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "primary" },
     ],
   },
   {
@@ -78,9 +75,9 @@ const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book the gym, register for an account, or contact us to enquire about membership.",
     links: [
-      { to: "/", label: "Log in", variant: "primary" },
+      { to: "/", label: "Log in", variant: "secondary" },
       { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "primary" },
     ],
   },
   {
@@ -91,9 +88,7 @@ const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book the cafe space, register for an account, or contact us to enquire about functions.",
     links: [
-      { to: "/", label: "Log in", variant: "primary" },
-      { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "secondary" },
+      { to: "/contact", label: "Enquire", variant: "primary" },
     ],
   },
 ];

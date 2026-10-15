@@ -122,7 +122,8 @@ header {
 .logo {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 24px;
+  margin-left: clamp(30px, 4vw, 60px);
 }
 
 .logo-img {
@@ -130,12 +131,27 @@ header {
   width: auto;
 }
 
+.logo--hidden {
+  visibility: hidden;
+}
+
+.home-logo {
+  display: block;
+
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+
+  margin: 0 auto;
+}
+
 
 
 nav {
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.8vw, 20px);
+  gap: clamp(6px, 1vw, 12px);
+  margin-right: clamp(30px, 4vw, 60px);
 }
 
 nav a {
@@ -491,6 +507,10 @@ textarea.field__input:focus {
   background: rgba(255, 255, 255, 0.08);
 }
 
+input[type="date"] {
+  accent-color: var(--red);
+}
+
 select.field__input,
 textarea.field__input {
   appearance: none;
@@ -819,12 +839,18 @@ footer strong {
     padding: 16px clamp(20px, 5vw, 40px);
   }
 
+  .logo {
+    margin-left: 0;
+  }
+
   nav {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     justify-items: center;
 
     width: 100%;
+
+    margin-right: 0;
 
     gap: 8px 10px;
   }
@@ -879,10 +905,6 @@ footer strong {
 
   main .contact-layout {
     grid-template-columns: 1fr;
-  }
-
-  .booking-info {
-    grid-column: auto;
   }
 
   footer {
@@ -1033,7 +1055,6 @@ video {
 }
 
 .cards-grid > *,
-.booking-info > *,
 .contact-layout > *,
 .services-grid > * {
   min-width: 0;
@@ -1657,14 +1678,6 @@ details[open] .program-chevron {
   color: #aeb4ae;
   font-size: 17px;
   line-height: 1.7;
-}
-
-/* ---- Academy booking info ---- */
-
-.booking-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 22px;
 }
 
 /* ---- Academy facility services ---- */
@@ -2394,21 +2407,11 @@ details[open] .program-chevron {
   border: 1px solid var(--border);
 }
 
-.map-box h4 {
-  margin: 0 0 6px;
-
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.map-box p {
-  margin: 0;
-
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.6;
+.map-container iframe {
+  display: block;
+  width: 100%;
+  height: 280px;
+  border: 0;
 }
 
 .contact-layout address {
@@ -2423,6 +2426,31 @@ details[open] .program-chevron {
   font-size: 15px;
   font-style: normal;
   line-height: 1.8;
+}
+
+.contact-layout address abbr {
+  text-decoration: none;
+}
+
+.hours-table {
+  border-collapse: collapse;
+
+  margin-top: 8px;
+}
+
+.hours-table th,
+.hours-table td {
+  padding: 2px 0;
+
+  text-align: left;
+  font-weight: inherit;
+  vertical-align: top;
+}
+
+.hours-table th {
+  padding-right: 20px;
+
+  white-space: nowrap;
 }
 
 .contact-details p {
@@ -2635,6 +2663,11 @@ details[open] .program-chevron {
   text-align: center;
 }
 
+.booking-grid > .booking-cell:nth-child(3n + 1),
+.booking-grid > .booking-cell:nth-child(3n + 2) {
+  border-right: 3px double rgba(255, 255, 255, 0.45);
+}
+
 .booking-cell--head {
   min-height: 56px;
 
@@ -2657,32 +2690,6 @@ details[open] .program-chevron {
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-}
-
-.booking-cell--time {
-  display: none;
-}
-
-.booking-cell--head.booking-cell--time {
-  display: none;
-}
-
-.booking-cell--slot {
-  background: rgba(255, 255, 255, 0.04);
-  border-top: none;
-  border-left: none;
-
-  color: #aeb4ae;
-
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
 }
 
 .booking-cell--slots {
@@ -2719,7 +2726,7 @@ details[open] .program-chevron {
 }
 
 .booking-slot:hover:not(:disabled) {
-  background: rgba(211, 43, 42, 0.18);
+  background: var(--red);
   color: var(--white);
 }
 
@@ -2729,18 +2736,19 @@ details[open] .program-chevron {
   color: var(--white);
 }
 
-.booking-cell--slot:hover:not(:disabled) {
-  background: rgba(211, 43, 42, 0.18);
-  color: var(--white);
-}
-
-.booking-cell--selected {
+.booking-slot--preview {
   background: var(--red);
+  border-color: var(--red);
   color: var(--white);
 }
 
-.booking-cell--selected:hover {
-  background: var(--red-hover);
+.booking-slot--range {
+  padding: 4px 3px;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: normal;
 }
 
 .booking-summary {
@@ -2808,13 +2816,6 @@ details[open] .program-chevron {
   font-weight: 600;
 }
 
-.booking-summary__price {
-  display: flex;
-  flex-direction: column;
-  font-weight: 700;
-  color: var(--white);
-}
-
 .booking-summary__info {
   display: flex;
   flex-direction: column;
@@ -2828,25 +2829,11 @@ details[open] .program-chevron {
   }
 }
 
-.booking-summary__prices {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 15px;
-  color: var(--muted);
-}
-
 .booking-summary__price-row {
   display: flex;
   justify-content: space-between;
   padding-top: 12px;
   align-items: baseline;
-}
-
-.booking-summary__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
 .booking-notes {
@@ -2899,8 +2886,10 @@ details[open] .program-chevron {
     align-items: stretch;
   }
 
-  .booking-summary__actions {
-    justify-content: flex-end;
+  .booking-summary__info {
+    display: grid;
+    grid-template-columns: auto;
+    margin-left: auto;
   }
 
   .booking-datenav {
@@ -2965,4 +2954,175 @@ details[open] .program-chevron {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 4px;
+}
+
+/* =========================================================
+   MEMBER PORTAL
+   ========================================================= */
+
+.portal {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+
+  gap: clamp(24px, 4vw, 48px);
+
+  align-items: start;
+}
+
+.portal__nav {
+  position: sticky;
+  top: 96px;
+
+  max-height: calc(100vh - 116px);
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  padding: 12px;
+
+  background: rgba(9, 13, 10, 0.88);
+
+  border: 1px solid var(--border);
+
+  scrollbar-width: thin;
+  scrollbar-color: #1f241f rgba(10, 14, 11, 0.92);
+}
+
+.portal__nav::-webkit-scrollbar {
+  width: 8px;
+}
+
+.portal__nav::-webkit-scrollbar-track {
+  background: rgba(10, 14, 11, 0.92);
+}
+
+.portal__nav::-webkit-scrollbar-thumb {
+  background: #1f241f;
+  border-radius: 6px;
+}
+
+.portal__nav::-webkit-scrollbar-thumb:hover {
+  background: #2a302a;
+}
+
+.portal__nav a {
+  padding: 10px 12px;
+
+  color: #c5cac5;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  border-left: 2px solid transparent;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.portal__nav a:hover {
+  color: var(--white);
+
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.portal__nav a.active {
+  color: var(--white);
+
+  border-left-color: var(--red);
+
+  background: rgba(211, 43, 42, 0.12);
+}
+
+.portal__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.portal__group + .portal__group {
+  margin-top: 14px;
+  padding-top: 14px;
+
+  border-top: 1px solid var(--border);
+}
+
+.portal__group-title {
+  padding: 2px 12px 6px;
+
+  color: var(--red);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.portal__body {
+  min-width: 0;
+}
+
+.portal__lede {
+  color: #c5cac5;
+
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.portal__facts {
+  display: grid;
+  gap: 12px;
+
+  margin: 0;
+}
+
+.portal__facts > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.portal__facts dt {
+  color: #919791;
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.portal__facts dd {
+  margin: 0;
+
+  color: var(--white);
+
+  font-size: 15px;
+  text-align: right;
+}
+
+@media (max-width: 850px) {
+  .portal {
+    grid-template-columns: 1fr;
+  }
+
+  .portal__nav {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
 }

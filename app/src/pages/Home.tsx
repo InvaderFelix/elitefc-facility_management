@@ -47,6 +47,12 @@ export function Home() {
 
   return (
     <main className="content">
+      <img
+        src="/assets/img/logo-white.png"
+        alt="Elite Football Academy"
+        className="home-logo"
+      />
+
       <section className="hero-split">
         <section className="hero">
           <div className="eyebrow">Player &amp; Parent Portal</div>

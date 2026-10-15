@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink, Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import "./App.css";
 import { Home } from "./pages/Home";
 import { Academy } from "./pages/Academy";
@@ -11,7 +11,12 @@ import { Booking } from "./pages/Booking";
 import { Contact } from "./pages/Contact";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
+import { PortalLayout } from "./pages/portal/PortalLayout";
+import { PortalPlaceholder } from "./pages/portal/PortalPlaceholder";
+import { PORTAL_NAV } from "./pages/portal/portalNav";
 import { getSupabase } from "./lib/supabase";
+import { AuthProvider } from "./lib/AuthProvider";
+import { useAuth } from "./lib/useAuth";
 
 const NAV_LINKS = [
   { to: "/facility", label: "Facility" },
@@ -45,6 +50,23 @@ function ScrollToTop() {
   return null;
 }
 
+function PageTitle() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const segment = pathname.split("/").filter(Boolean).pop();
+    const name = segment
+      ? segment
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")
+      : "Home";
+    document.title = `Elite Football - ${name}`;
+  }, [pathname]);
+
+  return null;
+}
+
 function Background() {
   const { pathname } = useLocation();
   const image = PAGE_BACKGROUNDS[pathname] ?? PAGE_BACKGROUNDS["/"];
@@ -61,8 +83,19 @@ function Background() {
 function AnimatedRoutes() {
   const { pathname } = useLocation();
 
+  /*
+   * Public pages remount on every nav so the page-in animation replays.
+   * The portal is different: PortalLayout (and its sidebar) must stay mounted
+   * while only <Outlet /> swaps, so give all /portal routes one stable key and
+   * skip the transition there.
+   */
+  const isPortal = pathname === "/portal" || pathname.startsWith("/portal/");
+
   return (
-    <div key={pathname} className="page-transition">
+    <div
+      key={isPortal ? "portal" : pathname}
+      className={isPortal ? undefined : "page-transition"}
+    >
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/facility" element={<Facility />} />
@@ -79,6 +112,38 @@ function AnimatedRoutes() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        {/*
+          TODO: re-wrap in <RequireAuth> once auth is wired — currently left
+          open so the portal can be previewed via Vite HMR. Routes are derived
+          from PORTAL_NAV (one source of truth for nav + routes). See TODO.md.
+        */}
+        <Route path="/portal" element={<PortalLayout />}>
+          {PORTAL_NAV.flatMap((section) =>
+            section.items.map((item) =>
+              item.path === "" ? (
+                <Route
+                  key="index"
+                  index
+                  element={
+                    item.element ?? (
+                      <PortalPlaceholder eyebrow={item.eyebrow ?? section.role} title={item.title ?? item.label} />
+                    )
+                  }
+                />
+              ) : (
+                <Route
+                  key={item.path}
+                  path={item.path}
+                  element={
+                    item.element ?? (
+                      <PortalPlaceholder eyebrow={item.eyebrow ?? section.role} title={item.title ?? item.label} />
+                    )
+                  }
+                />
+              ),
+            ),
+          )}
+        </Route>
         <Route path="*" element={<Home />} />
       </Routes>
     </div>
@@ -88,39 +153,20 @@ function AnimatedRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <AppHeader />
+      <AuthProvider>
+        <ScrollToTop />
+        <PageTitle />
+        <AppHeader />
+      </AuthProvider>
     </BrowserRouter>
   );
 }
 
 function AppHeader() {
-  const [session, setSession] = useState(false);
+  const { session } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const supabase = getSupabase();
-    if (!supabase) return;
-
-    let cancelled = false;
-
-    supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      setSession(Boolean(data.session));
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, sess) => {
-      if (cancelled) return;
-      setSession(Boolean(sess));
-    });
-
-    return () => {
-      cancelled = true;
-      subscription.unsubscribe();
-    };
-  }, []);
+  const { pathname } = useLocation();
+  const isHome = pathname === "/";
 
   const handleSignOut = async () => {
     const supabase = getSupabase();
@@ -134,7 +180,7 @@ function AppHeader() {
       <Background />
 
       <header>
-        <Link to="/" className="logo">
+        <Link to="/" className={`logo${isHome ? " logo--hidden" : ""}`}>
           <img src="/assets/img/logo-white.png" alt="Elite Football Academy" className="logo-img" />
         </Link>
 

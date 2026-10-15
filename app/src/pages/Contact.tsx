@@ -38,7 +38,6 @@ export function Contact() {
 
       <section className="login-callout">
         <div className="login-callout__body">
-          <div className="login-callout__kicker">QUICKEST WAY TO GET THINGS DONE</div>
           <h2>Log in to Manage Your Bookings &amp; Sessions</h2>
           <p>
             The contact form is for general enquiries only. To book pitches,
@@ -46,7 +45,7 @@ export function Contact() {
             team — you&apos;ll need to be logged in to your account.
           </p>
         </div>
-        <Link to="/facility" className="login-callout__cta">
+        <Link to="/" className="login-callout__cta">
           Log in to Your Account →
         </Link>
       </section>
@@ -56,25 +55,40 @@ export function Contact() {
           <Card eyebrow="Location" title="Elite Football Centre">
             <div className="card__body">
               <div className="map-container">
-                <div className="map-box">
-                  <div aria-hidden="true">
-                    📍
-                  </div>
-
-                  <h4>169 Rosamond Road</h4>
-                  <p>Maribyrnong VIC 3032</p>
-                  <p>Melbourne&apos;s western suburbs</p>
-                </div>
+                <iframe
+                  title="Map to Elite Football, Maribyrnong VIC 3032"
+                  src="https://www.google.com/maps?q=Elite%20Football%2C%20Maribyrnong%20VIC%203032&output=embed"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
               </div>
 
               <address>
                 <strong>169 Rosamond Rd, Maribyrnong VIC 3032</strong>
-                <br />
-                <abbr title="Monday to Friday">Mon–Fri</abbr>: 7am–12am
-                <br />
-                <abbr title="Saturday">Sat</abbr>: 7am–10pm
-                <br />
-                <abbr title="Sunday">Sun</abbr>: 10am–10pm
+
+                <table className="hours-table">
+                  <tbody>
+                    <tr>
+                      <th scope="row">
+                        <abbr title="Monday to Friday">Mon–Fri</abbr>
+                      </th>
+                      <td>7am–12am</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">
+                        <abbr title="Saturday">Sat</abbr>
+                      </th>
+                      <td>7am–10pm</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">
+                        <abbr title="Sunday">Sun</abbr>
+                      </th>
+                      <td>10am–10pm</td>
+                    </tr>
+                  </tbody>
+                </table>
               </address>
 
               <div className="contact-details">
