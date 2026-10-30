@@ -1,7 +1,7 @@
 import { type HTMLAttributes, type ReactNode } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  /* Small label above the title, e.g. "Step 2 of 4" */
+  /* Small label above the title, e.g. a section category */
   eyebrow?: string;
   title?: string;
   footer?: ReactNode;
@@ -9,8 +9,8 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /*
- * Generic content container. Used to wrap each signup wizard step,
- * dashboard panels, etc. Header renders only if eyebrow or title is given.
+ * Generic content container for page sections, cards in a grid and portal
+ * panels. Header renders only if eyebrow or title is given.
  */
 export function Card({ eyebrow, title, footer, children, className = '', ...rest }: CardProps) {
   const hasHeader = Boolean(eyebrow || title);

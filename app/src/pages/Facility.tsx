@@ -36,7 +36,7 @@ export function Facility() {
           <div className="eyebrow">FACILITY SERVICES</div>
           <h2>Everything Under One Roof</h2>
           <p>
-            From pitch hire and birthday parties to leagues, gym and cafe —
+            From pitch hire and birthday parties to leagues, gym, and cafe —
             book the whole facility, or any part of it, in Maribyrnong.
           </p>
         </div>

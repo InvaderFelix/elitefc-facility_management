@@ -1,21 +1,46 @@
 import { z } from "npm:zod@4";
 import { badRequest } from "./errors.ts";
 
-const AGE_GROUPS = ["petite", "miniroos", "junior", "academy"] as const;
-const PROGRAMS = ["miniroos", "junior", "academy", "gk", "e360"] as const;
+const childSchema = z.object({
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().min(1),
+  dateOfBirth: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: "Date of birth must be in yyyy-mm-dd format",
+    })
+    .refine((value) => !Number.isNaN(Date.parse(value)), {
+      message: "Date of birth must be a valid date",
+    }),
+});
 
 const registrationSchema = z.object({
-  parentName: z.string().trim().min(1),
+  firstName: z.string().trim().min(1),
+  lastName: z.string().trim().min(1),
   parentEmail: z.string().trim().toLowerCase().email(),
-  parentPhone: z.string().trim().min(3),
-  street: z.string().trim().min(1),
+  parentPhone: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\s/g, ""))
+    .pipe(
+      z.string().regex(/^04\d{8}$/, {
+        message: "Phone must be a 10-digit mobile number (e.g. 04xx xxx xxx)",
+      }),
+    ),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters",
+  }),
+  unitNumber: z.string().trim().optional(),
+  houseNumber: z.string().trim().min(1),
+  streetName: z.string().trim().min(1),
   suburb: z.string().trim().min(1),
   postcode: z.string().trim().regex(/^\d{4}$/, {
     message: "Postcode must be a 4-digit number",
   }),
-  playerName: z.string().trim().min(1),
-  ageGroup: z.enum(AGE_GROUPS),
-  program: z.enum(PROGRAMS),
+  children: z.array(childSchema).min(1, {
+    message: "At least one child is required",
+  }),
   terms: z
     .boolean()
     .optional()
@@ -26,22 +51,23 @@ const registrationSchema = z.object({
 
 export type RegistrationPayload = z.infer<typeof registrationSchema>;
 
-function splitName(fullName: string): { first: string; last: string } {
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length < 2) {
-    throw badRequest("Full name must include first and last name");
-  }
-  return { first: parts[0], last: parts.slice(1).join(" ") };
-}
-
 export function validateRegistration(body: unknown): {
   parent: { firstName: string; lastName: string };
   email: string;
   phone: string;
-  address: { street: string; suburb: string; postcode: string };
-  child: { firstName: string; lastName: string };
-  ageGroup: string;
-  program: string;
+  password: string;
+  address: {
+    unitNumber: string;
+    houseNumber: string;
+    streetName: string;
+    suburb: string;
+    postcode: string;
+  };
+  children: {
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+  }[];
 } {
   const parsed = registrationSchema.safeParse(body);
 
@@ -56,20 +82,26 @@ export function validateRegistration(body: unknown): {
   }
 
   const data = parsed.data;
-  const parent = splitName(data.parentName);
-  const child = splitName(data.playerName);
 
   return {
-    parent,
+    parent: {
+      firstName: data.firstName,
+      lastName: data.lastName,
+    },
     email: data.parentEmail,
     phone: data.parentPhone,
+    password: data.password,
     address: {
-      street: data.street,
+      unitNumber: data.unitNumber ?? "",
+      houseNumber: data.houseNumber,
+      streetName: data.streetName,
       suburb: data.suburb,
       postcode: data.postcode,
     },
-    child,
-    ageGroup: data.ageGroup,
-    program: data.program,
+    children: data.children.map((child) => ({
+      firstName: child.firstName,
+      lastName: child.lastName,
+      dateOfBirth: child.dateOfBirth,
+    })),
   };
 }

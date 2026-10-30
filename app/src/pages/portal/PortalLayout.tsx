@@ -18,9 +18,6 @@ function navOrder(a: PortalNavItem, b: PortalNavItem) {
  * Persistent chrome for every /portal route. Pages render into <Outlet />, so
  * adding a dashboard page means adding one entry to portalNav.tsx — the routes
  * (App.tsx) and the sidebar below both read from it.
- *
- * TODO: once auth is wired, hide sections whose `roles` the viewer lacks
- * instead of showing all of them.
  */
 export function PortalLayout() {
   return (

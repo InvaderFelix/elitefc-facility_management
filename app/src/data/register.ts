@@ -1,12 +1,3 @@
-/* Select options for a child's program (used on the registration form). */
-export const PROGRAM_OPTIONS = [
-  { value: "miniroos", label: "MiniRoos" },
-  { value: "junior", label: "Juniors" },
-  { value: "academy", label: "Academy" },
-  { value: "gk", label: "Goalkeeper" },
-  { value: "e360", label: "E360" },
-];
-
 const CHILD_ORDINAL_LABELS = [
   "Second",
   "Third",

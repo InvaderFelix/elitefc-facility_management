@@ -10,13 +10,14 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/pages/register.css";
 import { Card } from "../components/Card";
 import { TextInput } from "../components/TextInput";
-import { Select } from "../components/Select";
+
 import { Button } from "../components/Button";
 import { DateInput } from "../components/DateInput";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { PageHero } from "../components/PageHero";
 import { Lightbox } from "../components/Lightbox";
 import { getSupabase } from "../lib/supabase";
+import { isPasswordBreached } from "../lib/register/breachedPassword";
 import { useAddressLookup } from "../hooks/useAddressLookup";
 import { useFieldErrors } from "../hooks/useFieldErrors";
 import type { AddressSuggestion } from "../lib/register/addressLookup";
@@ -35,7 +36,7 @@ import {
   validateStreetName,
   validateSuburb,
 } from "../lib/register/validation";
-import { childHeading, PROGRAM_OPTIONS, TERMS_PARAGRAPHS } from "../data/register";
+import { childHeading, TERMS_PARAGRAPHS } from "../data/register";
 
 interface ChildDraft {
   id: number;
@@ -56,7 +57,8 @@ type ParentField =
   | "houseNumber"
   | "streetName"
   | "suburb"
-  | "postcode";
+  | "postcode"
+  | "terms";
 
 export function Register() {
   const [submitting, setSubmitting] = useState(false);
@@ -66,6 +68,7 @@ export function Register() {
   const [children, setChildren] = useState<ChildDraft[]>([{ id: 1 }]);
   const [childErrors, setChildErrors] = useState<Record<number, ChildFieldErrors>>({});
   const [termsOpen, setTermsOpen] = useState(false);
+  const [breachNotice, setBreachNotice] = useState("");
   const navigate = useNavigate();
   const lookup = useAddressLookup();
 
@@ -120,6 +123,28 @@ export function Register() {
 
   const handlePhoneBlur = (event: FocusEvent<HTMLInputElement>) => {
     setFieldError("phone", validatePhone(event.target.value));
+  };
+
+  /*
+   * Informational only — a breached password is shown as a hint and never
+   * blocks registration. The lookup is k-anonymous (see breachedPassword.ts)
+   * and fail-open, so network problems are silently ignored.
+   */
+  const handlePasswordBlur = async (event: FocusEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (!value) {
+      setBreachNotice("");
+      return;
+    }
+
+    const breached = await isPasswordBreached(value);
+    if (event.target.value !== value) return;
+
+    setBreachNotice(
+      breached
+        ? "This password has appeared in a data breach. We recommend choosing a different one."
+        : "",
+    );
   };
 
   const handleNameKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -186,7 +211,8 @@ export function Register() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
 
     const password = String(data.get("password") ?? "");
     const confirmPassword = String(data.get("confirmPassword") ?? "");
@@ -204,6 +230,9 @@ export function Register() {
       streetName: validateStreetName(String(data.get("streetName") ?? "")),
       suburb: validateSuburb(String(data.get("suburb") ?? "")),
       postcode: validatePostcode(String(data.get("postcode") ?? "")),
+      terms: data.get("terms")
+        ? undefined
+        : "You must agree to the terms and conditions",
     };
 
     const childErrorMap: Record<number, ChildFieldErrors> = {};
@@ -237,10 +266,11 @@ export function Register() {
       fieldOrder.push([`child-${child.id}-surname`, childErr.surname]);
       fieldOrder.push([`child-${child.id}-dob`, childErr.dob]);
     }
+    fieldOrder.push(["terms", next.terms]);
 
     const firstInvalid = fieldOrder.find(([, fieldError]) => fieldError !== undefined);
     if (firstInvalid) {
-      const element = event.currentTarget.elements.namedItem(firstInvalid[0]);
+      const element = form.elements.namedItem(firstInvalid[0]);
       if (element instanceof HTMLInputElement) {
         element.scrollIntoView({ behavior: "smooth", block: "center" });
         element.focus();
@@ -257,11 +287,11 @@ export function Register() {
     setSubmitting(true);
 
     try {
-      // Extract child data from the first child
-      const firstChild = children[0];
-      const childFirstName = String(data.get(`child-${firstChild.id}-firstName`) ?? "");
-      const childLastName = String(data.get(`child-${firstChild.id}-surname`) ?? "");
-      const childProgram = String(data.get(`child-${firstChild.id}-program`) ?? "");
+      const childPayload = children.map((child) => ({
+        firstName: String(data.get(`child-${child.id}-firstName`) ?? ""),
+        lastName: String(data.get(`child-${child.id}-surname`) ?? ""),
+        dateOfBirth: String(data.get(`child-${child.id}-dob`) ?? ""),
+      }));
 
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/register-account`,
@@ -275,14 +305,14 @@ export function Register() {
             lastName: String(data.get("surname") ?? ""),
             parentEmail: String(data.get("parentEmail") ?? ""),
             parentPhone: String(data.get("parentPhone") ?? ""),
-            street: String(data.get("streetName") ?? ""),
+            password,
+            unitNumber: String(data.get("unitNumber") ?? ""),
+            houseNumber: String(data.get("houseNumber") ?? ""),
+            streetName: String(data.get("streetName") ?? ""),
             suburb: String(data.get("suburb") ?? ""),
             postcode: String(data.get("postcode") ?? ""),
-            childFirstName,
-            childLastName,
-            ageGroup: childProgram,
-            program: childProgram,
-            terms: Boolean(data.get("terms") ?? false),
+            children: childPayload,
+            terms: Boolean(data.get("terms")),
           }),
         },
       );
@@ -309,7 +339,7 @@ export function Register() {
         eyebrow="JOIN THE ACADEMY"
         title="Create an Account"
         accent="One Login Access"
-        description="Register once to book pitches, gym sessions, leagues and parties, and to manage your Academy training schedule."
+        description="Register once to book pitches, gym sessions, leagues, and to manage your Academy training schedule."
       />
 
       <section className="register-layout">
@@ -372,6 +402,9 @@ export function Register() {
                 autoComplete="new-password"
                 required
                 error={errors.password}
+                hint={breachNotice || undefined}
+                onBlur={handlePasswordBlur}
+                onChange={() => setBreachNotice("")}
               />
 
               <TextInput
@@ -514,24 +547,14 @@ export function Register() {
                       />
                     </div>
 
-                    <div className="register-address__row">
-                      <DateInput
-                        label="Date of Birth"
-                        name={`child-${child.id}-dob`}
-                        required
-                        maxDate={TODAY}
-                        error={childErrors[child.id]?.dob}
-                        onBlur={(event) => handleChildDobBlur(event, child.id)}
-                      />
-
-                      <Select
-                        label="Program"
-                        name={`child-${child.id}-program`}
-                        placeholder="Select program"
-                        required
-                        options={PROGRAM_OPTIONS}
-                      />
-                    </div>
+                    <DateInput
+                      label="Date of Birth"
+                      name={`child-${child.id}-dob`}
+                      required
+                      maxDate={TODAY}
+                      error={childErrors[child.id]?.dob}
+                      onBlur={(event) => handleChildDobBlur(event, child.id)}
+                    />
 
                     {children.length > 1 && (
                       <div className="remove-child-row">
@@ -556,7 +579,22 @@ export function Register() {
 
               <div className="form-options form-options--spaced">
                 <label className="remember">
-                  <input type="checkbox" id="terms" required />
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                    required
+                    onChange={(event) => {
+                      if (errors.terms) {
+                        setFieldError(
+                          "terms",
+                          event.target.checked
+                            ? undefined
+                            : "You must agree to the terms and conditions",
+                        );
+                      }
+                    }}
+                  />
                   <span>
                     I agree to the{" "}
                     <button type="button" className="terms-link" onClick={openTerms}>
@@ -564,6 +602,7 @@ export function Register() {
                     </button>
                   </span>
                 </label>
+                <ErrorMessage>{errors.terms}</ErrorMessage>
               </div>
 
               <Button

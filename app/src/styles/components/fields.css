@@ -123,6 +123,44 @@
     color: var(--white);
   }
 
+  .field__control {
+    position: relative;
+  }
+
+  .field__control .field__input {
+    padding-right: 68px;
+  }
+
+  .field__toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+
+    transform: translateY(-50%);
+
+    padding: 6px 4px;
+
+    background: none;
+    border: none;
+
+    color: #aeb4ae;
+
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease;
+  }
+
+  .field__toggle:hover,
+  .field__toggle:focus-visible {
+    color: var(--red);
+  }
+
   textarea.field__input {
     height: auto;
     min-height: 120px;

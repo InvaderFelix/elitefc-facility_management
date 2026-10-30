@@ -8,4 +8,5 @@ import "./components/fields.css";
 import "./components/button.css";
 import "./components/card.css";
 import "./components/grid.css";
+import "./components/lightbox.css";
 import "./content/content.css";

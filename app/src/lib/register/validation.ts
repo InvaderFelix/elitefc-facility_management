@@ -4,10 +4,9 @@
  */
 
 export const NAME_ALLOWED = /^[\p{L}\s'.-]+$/u;
-export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const PHONE_RE = /^04\d{8}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^04\d{8}$/;
 const STREET_NUMBER_RE = /^\d+[A-Za-z]?(?:\s*-\s*\d+[A-Za-z]?)?$/;
-const SUBURB_RE = /^[\p{L}\s'.-]+$/u;
 
 export const todayIso = (): string => new Date().toISOString().slice(0, 10);
 
@@ -62,7 +61,7 @@ export const validateStreetName = (value: string): string | undefined => {
 export const validateSuburb = (value: string): string | undefined => {
   const trimmed = value.trim();
   if (trimmed === "") return "Suburb is required";
-  return SUBURB_RE.test(trimmed) ? undefined : "Enter a valid suburb";
+  return NAME_ALLOWED.test(trimmed) ? undefined : "Enter a valid suburb";
 };
 
 export const validatePostcode = (value: string): string | undefined => {

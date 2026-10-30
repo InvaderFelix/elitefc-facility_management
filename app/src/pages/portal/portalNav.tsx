@@ -27,9 +27,7 @@ export interface PortalNavSection {
 /*
  * Single source of truth for the portal's navigation AND its routes.
  * App.tsx generates the nested /portal routes from this, and PortalLayout
- * renders the sidebar from it — so a new page is one entry here.
- *
- * TODO: filter sections by the viewer's roles once auth is wired. Every
+ * renders the sidebar from it — so a new page is one entry here. Every
  * section is currently shown so the whole portal can be previewed.
  */
 export const PORTAL_NAV: PortalNavSection[] = [

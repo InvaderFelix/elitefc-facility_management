@@ -226,6 +226,9 @@
 
     display: flex;
     flex-direction: column;
+
+    position: relative;
+    overflow: hidden;
   }
 
   .services-grid .card + .card {
@@ -314,11 +317,6 @@
     transform: translateY(-50%);
 
     background: var(--red);
-  }
-
-  .services-grid .card {
-    position: relative;
-    overflow: hidden;
   }
 
   .services-grid .card::before {

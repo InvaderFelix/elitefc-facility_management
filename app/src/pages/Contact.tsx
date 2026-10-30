@@ -35,7 +35,7 @@ export function Contact() {
           <h2>Log in to Manage Your Bookings &amp; Sessions</h2>
           <p>
             The contact form is for general enquiries only. To book pitches,
-            gym sessions and parties, manage your Academy schedule, or join a
+            gym sessions, and parties, manage your Academy schedule, or join a
             team — you&apos;ll need to be logged in to your account.
           </p>
         </div>
@@ -59,7 +59,7 @@ export function Contact() {
               </div>
 
               <address>
-                <strong>169 Rosamond Rd, Maribyrnong VIC 3032</strong>
+                <strong>169 Rosamond Road, Maribyrnong VIC 3032</strong>
 
                 <table className="hours-table">
                   <tbody>
@@ -67,7 +67,7 @@ export function Contact() {
                       <th scope="row">
                         <abbr title="Monday to Friday">Mon–Fri</abbr>
                       </th>
-                      <td>7am–12am</td>
+                      <td>7am–midnight</td>
                     </tr>
                     <tr>
                       <th scope="row">

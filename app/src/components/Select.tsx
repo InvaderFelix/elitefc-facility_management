@@ -17,9 +17,8 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 /*
- * Labeled select. Intended use includes fixed-vocabulary fields like
- * parent_child_relationship.relationship_type once that enum is finalized:
- * <Select label="Relationship" options={RELATIONSHIP_TYPE_OPTIONS} ... />
+ * Labeled select for fixed-vocabulary fields, e.g. the registration form's
+ * Program field: <Select label="Program" options={PROGRAM_OPTIONS} ... />
  */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, options, error, hint, required, id, placeholder, className = '', ...rest }, ref) => {

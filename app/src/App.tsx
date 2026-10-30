@@ -100,9 +100,9 @@ function AnimatedRoutes() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         {/*
-          TODO: re-wrap in <RequireAuth> once auth is wired — currently left
-          open so the portal can be previewed via Vite HMR. Routes are derived
-          from PORTAL_NAV (one source of truth for nav + routes). See TODO.md.
+          Routes are derived from PORTAL_NAV — the single source of truth for
+          both these routes and PortalLayout's sidebar. This tree is
+          intentionally left ungated while auth is being wired.
         */}
         <Route path="/portal" element={<PortalLayout />}>
           {PORTAL_NAV.flatMap((section) =>

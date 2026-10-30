@@ -49,3 +49,15 @@ coverage/
 
 # Optional: TypeScript build info
 *.tsbuildinfo
+# Supabase CLI local state
+supabase/.branches/
+supabase/.temp/
+
+# Vercel
+.vercel/
+
+# E2E testing
+playwright-report/
+test-results/
+cypress/videos/
+cypress/screenshots/

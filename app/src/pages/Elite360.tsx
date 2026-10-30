@@ -12,7 +12,7 @@ export function Elite360() {
   return (
     <main className="content">
       <PageHero
-        eyebrow="E360"
+        eyebrow="Elite360"
         title="Professional Athlete"
         accent="Development"
         description="Elite performance coaching from U13 to U18 — and beyond. Full-time and part-time programs built to develop talented footballers on their pathway to the top."
@@ -22,7 +22,7 @@ export function Elite360() {
         <div className="card">
           <div className="section-heading">
             <div className="eyebrow">THE DEVELOPMENT GAP</div>
-            <h2>The Gap E360 Is Built to Close</h2>
+            <h2>The Gap Elite360 Is Built to Close</h2>
             <p>
               Australian football has a well-documented problem: kids are
               selected early on the wrong signals, then stall exactly when it
@@ -48,7 +48,7 @@ export function Elite360() {
           <div className="eyebrow">YOUR PATHWAY TO SENIOR FOOTBALL</div>
           <h2>Two Programs. One Pathway.</h2>
           <p>
-            E360 develops talented footballers on their pathway to the top. Available to
+            Elite360 develops talented footballers on their pathway to the top. Available to
             U13 players through senior players looking for more — book your
             assessment and start the journey today.
           </p>
@@ -132,8 +132,8 @@ export function Elite360() {
         <Card eyebrow="PLAYERS STALL BETWEEN 16 AND 19" title="In Australia Specifically">
           <div className="card__body">
             <p>
-              Coaches and former internationals broadly agree Australian 15 to 16
-              year olds match European peers technically, then diverge. The
+              Coaches and former internationals broadly agree Australian 15- to
+              16-year-olds match European peers technically, then diverge. The
               data backs it up:
             </p>
             <ul>

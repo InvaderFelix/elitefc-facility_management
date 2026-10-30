@@ -154,6 +154,16 @@
     border-color: var(--red);
   }
 
+  .booking-legend__swatch--blocked {
+    background: rgba(245, 245, 245, 0.3);
+  }
+
+  .booking-legend__note {
+    color: var(--muted);
+
+    font-size: 14px;
+  }
+
   .booking-sheet {
     overflow-x: auto;
 
@@ -408,6 +418,14 @@
     .booking-toolbar,
     .booking-summary {
       align-items: stretch;
+    }
+
+    .booking-legend {
+      justify-content: center;
+
+      width: 100%;
+
+      text-align: center;
     }
 
     .booking-summary__info {

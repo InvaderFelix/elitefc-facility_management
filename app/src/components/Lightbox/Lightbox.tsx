@@ -4,7 +4,7 @@ import { useBodyScrollLock } from "../../hooks/useBodyScrollLock";
 import { useEscapeKey } from "../../hooks/useEscapeKey";
 
 interface LightboxProps {
-  /** BEM block name, e.g. "coach-lightbox" — drives the `__panel`/`__close` classes. */
+  /** Variant block name, e.g. "coach-lightbox" — adds `${variant}__panel` for page-specific sizing/content. */
   variant: string;
   /** Toggles the `--open` modifier; the parent controls mounting (close animations). */
   open: boolean;
@@ -29,16 +29,19 @@ export function Lightbox({
 
   return createPortal(
     <div
-      className={`${variant}${open ? ` ${variant}--open` : ""}`}
+      className={`lightbox ${variant}${open ? " lightbox--open" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
       onClick={onClose}
     >
-      <div className={`${variant}__panel`} onClick={(event) => event.stopPropagation()}>
+      <div
+        className={`lightbox__panel ${variant}__panel`}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
-          className={`${variant}__close`}
+          className="lightbox__close"
           aria-label="Close"
           onClick={onClose}
         >

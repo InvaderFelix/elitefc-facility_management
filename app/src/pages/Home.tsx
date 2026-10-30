@@ -58,7 +58,7 @@ export function Home() {
           eyebrow="Player & Parent Portal"
           title="Become"
           accent="Elite"
-          description="Your football journey starts here. Access your training, fixtures, development progress and Academy updates from one place."
+          description="Your football journey starts here. Access your training, fixtures, development progress, and Academy updates from one place."
         >
           <div className="stats">
             <div className="stat">
@@ -93,7 +93,7 @@ export function Home() {
 
           <form onSubmit={handleSubmit}>
             <div className="field">
-              <label htmlFor="email">Email / Username</label>
+              <label htmlFor="email">Email</label>
               <input
                 id="email"
                 type="email"
@@ -140,7 +140,7 @@ export function Home() {
 
           <div className="join">
             New to Elite? &nbsp;
-            <Link to="/register">Join the Academy →</Link>
+            <Link to="/register">Register Account</Link>
           </div>
         </section>
       </section>

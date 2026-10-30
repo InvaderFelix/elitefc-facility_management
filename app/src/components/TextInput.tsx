@@ -1,4 +1,4 @@
-import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import { ErrorMessage } from './ErrorMessage';
 
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -9,15 +9,24 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 /**
- * Standard labeled text field. Works directly with react-hook-form's
- * `register()` spread: <TextInput label="Email" {...register('email')} error={errors.email?.message} />
+ * Standard labeled text field. Forwards its ref, so it works with a plain
+ * uncontrolled <input> or any form library that hands you a ref:
+ * <TextInput label="Email" name="email" error={errors.email} />
  */
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, error, hint, required, id, className = '', ...rest }, ref) => {
+  ({ label, error, hint, required, id, className = '', type = 'text', ...rest }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const hintId = hint ? `${inputId}-hint` : undefined;
     const errorId = error ? `${inputId}-error` : undefined;
+
+    /*
+     * Password fields get a show/hide toggle. The real input keeps its
+     * password type so browsers and password managers still treat it as such.
+     */
+    const [revealed, setRevealed] = useState(false);
+    const isPassword = type === 'password';
+    const inputType = isPassword && revealed ? 'text' : type;
 
     return (
       <div className={`field ${error ? 'field--error' : ''} ${className}`.trim()}>
@@ -30,15 +39,29 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             </span>
           )}
         </label>
-        <input
-          ref={ref}
-          id={inputId}
-          className="field__input"
-          aria-invalid={!!error}
-          aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
-          required={required}
-          {...rest}
-        />
+        <div className={isPassword ? 'field__control' : undefined}>
+          <input
+            ref={ref}
+            id={inputId}
+            type={inputType}
+            className="field__input"
+            aria-invalid={!!error}
+            aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
+            required={required}
+            {...rest}
+          />
+          {isPassword && (
+            <button
+              type="button"
+              className="field__toggle"
+              onClick={() => setRevealed((value) => !value)}
+              aria-label={revealed ? 'Hide password' : 'Show password'}
+              aria-pressed={revealed}
+            >
+              {revealed ? 'Hide' : 'Show'}
+            </button>
+          )}
+        </div>
         {hint && !error && (
           <p id={hintId} className="field__hint">
             {hint}

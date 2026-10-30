@@ -48,10 +48,10 @@ export const AGE_GROUPS: AgeGroup[] = [
     title: "Petite",
     ageRange: "Ages 3 to 5",
     description:
-      "Petite is where the Elite FC pathway begins. Built for our youngest players, sessions are all about fun, movement and falling in love with the ball.",
+      "Petite is where the Elite FC pathway begins. Built for our youngest players, sessions are all about fun, movement, and falling in love with the ball.",
     focus: [
-      "Fun, movement and first touch",
-      "Coordination, balance and confidence",
+      "Fun, movement, and first touch",
+      "Coordination, balance, and confidence",
       "Small groups with qualified coaches",
       "Purpose-built indoor facility, rain or shine",
     ],
@@ -64,7 +64,7 @@ export const AGE_GROUPS: AgeGroup[] = [
     description:
       "Pre-Academy takes the fun of Petite and adds real structure. Players learn fundamentals in a way that keeps them engaged and moving — the bridge between first-time play and MiniRoos.",
     focus: [
-      "Dribbling, passing, first touch and game sense",
+      "Dribbling, passing, first touch, and game sense",
       "Structured skill sessions",
       "Qualified coaches with youth development experience",
       "Pathway forward into Academy / MiniRoos",
@@ -75,24 +75,24 @@ export const AGE_GROUPS: AgeGroup[] = [
     title: "Academy",
     ageRange: "Ages 7 to 13",
     description:
-      "Academy is Elite FC's MiniRoos program. Small-sided football means more touches, more decisions and more time on the ball — delivered with a real curriculum.",
+      "Academy is Elite FC's MiniRoos program. Small-sided football means more touches, more decisions, and more time on the ball — delivered with a real curriculum.",
     focus: [
       "MiniRoos small-sided football",
       "Qualified coaches and development curriculum",
       "Moonee Valley Knights FC partnership for Football Victoria competition",
-      "Pathway to Juniors, Seniors and E360 / NPL",
+      "Pathway to Juniors, Seniors, and Elite360 / National Premier Leagues (NPL)",
       "National tournaments and international tour opportunities",
     ],
   },
   {
     id: "4",
-    title: "Elite 360",
+    title: "Elite360",
     ageRange: "Ages 13 to 18",
     description:
       "Elite high-performance program for advanced players seeking professional pathways.",
     focus: [
       "Elite technical training",
-      "Strength & conditioning",
+      "Strength and conditioning",
       "Mental performance",
       "Competitive match play",
     ],

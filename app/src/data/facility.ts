@@ -9,7 +9,7 @@ export interface ServiceCard {
 
 export const SERVICE_CARDS: ServiceCard[] = [
   {
-    eyebrow: "Book Courts",
+    eyebrow: "Book Pitches",
     title: "Pitch Hire",
     body: "FIFA-grade indoor and outdoor pitches, open 7 days.",
     items: [
@@ -18,7 +18,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
       "Outdoor 5-a-side — $110 per hour",
     ],
     message:
-      "Log in to book a pitch for next session — or register if you haven't created an account yet.",
+      "Log in to book a pitch for your next session — or register if you haven't created an account yet.",
     links: [
       { to: "/booking", label: "Book a Pitch", variant: "primary" },
       { to: "/", label: "Log in", variant: "secondary" },
@@ -31,7 +31,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     body: "Social and competitive football all year round with live results.",
     items: [
       "Adult League — Monday 7-a-side social · Tuesday intermediate",
-      "Junior League — ESL summer competition",
+      "Junior League — Elite Summer League (ESL) competition",
       "Fixtures, results & replays published live",
     ],
     message:
@@ -55,7 +55,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
   {
     eyebrow: "Events",
     title: "Venue Hire",
-    body: "Hire the whole venue for events, schools, tournaments and functions.",
+    body: "Hire the whole venue for events, schools, tournaments, and functions.",
     items: ["Change rooms & amenities", "Free on-site parking"],
     message:
       "Log in to book the venue, register for an account, or contact us to enquire about your event.",
@@ -79,7 +79,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
   {
     eyebrow: "All Week",
     title: "Cafe & Licensed Bar",
-    body: "Coffee, food and licensed bar for players, parents and spectators.",
+    body: "Coffee, food, and licensed bar for players, parents, and spectators.",
     items: ["Monday–Friday 8am–8pm", "Saturday–Sunday 8am–9pm"],
     message:
       "Log in to book the cafe space, register for an account, or contact us to enquire about functions.",

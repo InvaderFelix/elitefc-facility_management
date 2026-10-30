@@ -383,6 +383,13 @@ inspector_port = 8083
 # The Deno major version to use.
 deno_version = 2
 
+# Registration is a public endpoint — the function enforces validation and
+# database-backed rate limiting itself instead of a gateway JWT check.
+# Hosted deploys need the same treatment: supabase functions deploy
+# register-account --no-verify-jwt
+[functions.register-account]
+verify_jwt = false
+
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 

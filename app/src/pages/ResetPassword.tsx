@@ -116,7 +116,7 @@ export function ResetPassword() {
           <div className="card__body">
             {linkStatus === "checking" && (
               <p className="register-success">
-                Checking your reset link…
+                Checking your reset link...
               </p>
             )}
 
@@ -172,7 +172,7 @@ export function ResetPassword() {
 
             {done && (
               <p className="register-success">
-                Password updated. Taking you back to the login page…
+                Password updated. Taking you back to the login page...
               </p>
             )}
           </div>

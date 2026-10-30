@@ -29,9 +29,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     /*
-     * Maps the signed-in JWT back to a domain person. Depends on the pending
-     * `persons.auth_user_id` column (see docs/database/TODO_DATABASE.md); until
-     * it exists the query errors and we simply degrade to an unlinked user.
+     * Maps the signed-in JWT back to a domain person via
+     * `persons.auth_user_id`. If no person is linked we degrade to an
+     * unlinked user rather than failing the session.
      */
     const { data: personRow, error: personError } = await supabase
       .from("persons")

@@ -113,7 +113,7 @@ export function ForgotPassword() {
 
         <div className="join">
           New to Elite? &nbsp;
-          <Link to="/register">Join the Academy →</Link>
+          <Link to="/register">Register Account</Link>
         </div>
       </section>
     </main>

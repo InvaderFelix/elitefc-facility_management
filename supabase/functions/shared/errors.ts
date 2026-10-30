@@ -32,3 +32,10 @@ export function conflict(message: string, code?: string): AppError {
 export function internal(message = "Internal server error"): AppError {
   return new AppError(500, message);
 }
+
+export function tooManyRequests(
+  message = "Too many requests",
+  code?: string,
+): AppError {
+  return new AppError(429, message, code);
+}
