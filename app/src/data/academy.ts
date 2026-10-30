@@ -80,13 +80,13 @@ export const AGE_GROUPS: AgeGroup[] = [
       "MiniRoos small-sided football",
       "Qualified coaches and development curriculum",
       "Moonee Valley Knights FC partnership for Football Victoria competition",
-      "Pathway to Juniors, Seniors, and Elite360 / National Premier Leagues (NPL)",
+      "Pathway to Juniors, Seniors, and <span className=\"elite360-green\">Elite360</span> / National Premier Leagues (NPL)",
       "National tournaments and international tour opportunities",
     ],
   },
   {
     id: "4",
-    title: "Elite360",
+    title: "Elite360" as unknown as string,
     ageRange: "Ages 13 to 18",
     description:
       "Elite high-performance program for advanced players seeking professional pathways.",

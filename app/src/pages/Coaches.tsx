@@ -97,7 +97,7 @@ export function Coaches() {
               )}
 
               <span className="coach-tile__open" aria-hidden="true">
-                View
+                Book
               </span>
 
               <span className="coach-tile__label">

@@ -6,7 +6,9 @@ import { Facility } from "./pages/Facility";
 import { Register } from "./pages/Register";
 import { Coaches } from "./pages/Coaches";
 import { Elite360 } from "./pages/Elite360";
-import { Booking } from "./pages/Booking";
+import { BookPitch } from "./pages/BookPitch";
+import { BookCoach } from "./pages/BookCoach";
+import { BookParty } from "./pages/BookParty";
 import { Contact } from "./pages/Contact";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
@@ -21,9 +23,9 @@ import { PAGE_BACKGROUNDS } from "./data/pageBackgrounds";
 const NAV_LINKS = [
   { to: "/facility", label: "Facility" },
   { to: "/academy", label: "Academy" },
-  { to: "/elite360", label: "Elite360" },
+  { to: "/elite360", label: <span className="elite360-green">Elite360</span> },
   { to: "/coaches", label: "Coaches" },
-  { to: "/booking", label: "Booking" },
+  { to: "/bookpitch", label: "Bookings" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -86,12 +88,10 @@ function AnimatedRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/facility" element={<Facility />} />
-        <Route
-          path="/booking"
-          element={
-            <Booking />
-          }
-        />
+        <Route path="/booking" element={<BookPitch />} />
+        <Route path="/bookpitch" element={<BookPitch />} />
+        <Route path="/bookcoach" element={<BookCoach />} />
+        <Route path="/bookparty" element={<BookParty />} />
         <Route path="/academy" element={<Academy />} />
         <Route path="/register" element={<Register />} />
         <Route path="/coaches" element={<Coaches />} />
@@ -172,15 +172,47 @@ function AppHeader() {
         </Link>
 
         <nav>
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-            >
-              {link.label}
-            </NavLink>
-          ))}
+          {NAV_LINKS.map((link) => {
+            if (link.to === "/elite360") {
+              return (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) => (isActive ? "elite360-green active" : "")}
+                >
+                  Elite360
+                </NavLink>
+              );
+            }
+            if (link.to === "/bookpitch") {
+              return (
+                <div key={link.to} className="nav__item nav__item--dropdown">
+                  <NavLink
+                    to="/bookpitch"
+                    className={({ isActive }) =>
+                      `nav__link nav__link--bookings nav__link--bookings-underline${isActive ? " active" : ""}`
+                    }
+                  >
+                    Bookings
+                  </NavLink>
+                  <div className="nav__dropdown">
+                    <Link to="/bookpitch" className="nav__dropdown-link">Book a Pitch</Link>
+                    <Link to="/bookcoach" className="nav__dropdown-link">Book a Coach</Link>
+                    <Link to="/bookparty" className="nav__dropdown-link">Book a Party</Link>
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) => (isActive ? "active" : undefined)}
+              >
+                {link.label}
+              </NavLink>
+            );
+          })}
           {session && (
             <button type="button" onClick={handleSignOut} className="btn btn--ghost btn--sm">
               Log out

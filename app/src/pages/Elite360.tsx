@@ -12,7 +12,7 @@ export function Elite360() {
   return (
     <main className="content">
       <PageHero
-        eyebrow="Elite360"
+        eyebrow={<span style={{ color: "var(--elite360-green)" }}>Elite360</span> as any}
         title="Professional Athlete"
         accent="Development"
         description="Elite performance coaching from U13 to U18 — and beyond. Full-time and part-time programs built to develop talented footballers on their pathway to the top."
@@ -21,8 +21,7 @@ export function Elite360() {
       <section className="academy-services">
         <div className="card">
           <div className="section-heading">
-            <div className="eyebrow">THE DEVELOPMENT GAP</div>
-            <h2>The Gap Elite360 Is Built to Close</h2>
+            <h2>The Gap <span className="elite360-green">Elite360</span> Is Built to Close</h2>
             <p>
               Australian football has a well-documented problem: kids are
               selected early on the wrong signals, then stall exactly when it
@@ -48,7 +47,7 @@ export function Elite360() {
           <div className="eyebrow">YOUR PATHWAY TO SENIOR FOOTBALL</div>
           <h2>Two Programs. One Pathway.</h2>
           <p>
-            Elite360 develops talented footballers on their pathway to the top. Available to
+            <span className="elite360-green">Elite360</span> is for talented footballers on their pathway to the top. Available to
             U13 players through senior players looking for more — book your
             assessment and start the journey today.
           </p>

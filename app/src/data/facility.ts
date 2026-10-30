@@ -20,7 +20,7 @@ export const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book a pitch for your next session — or register if you haven't created an account yet.",
     links: [
-      { to: "/booking", label: "Book a Pitch", variant: "primary" },
+      { to: "/bookpitch", label: "Book a Pitch", variant: "primary" },
       { to: "/", label: "Log in", variant: "secondary" },
       { to: "/register", label: "Register", variant: "secondary" },
     ],

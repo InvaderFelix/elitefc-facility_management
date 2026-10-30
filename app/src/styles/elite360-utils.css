@@ -1,0 +1,6 @@
+@layer components {
+  .elite360-green {
+    color: var(--elite360-green);
+  }
+}
+.hero__eyebrow:has-text('Elite360') { color: var(--elite360-green); }
