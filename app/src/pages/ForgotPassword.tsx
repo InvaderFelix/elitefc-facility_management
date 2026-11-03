@@ -27,7 +27,7 @@ export function ForgotPassword() {
     const supabase = getSupabase();
     if (!supabase) {
       setError(
-        "Password reset isn't available yet — authentication is still being configured.",
+        "Password reset isn't available yet, authentication is still being configured.",
       );
       return;
     }
@@ -69,39 +69,37 @@ export function ForgotPassword() {
 
       <section className="register-layout">
         <Card eyebrow="Reset Password" title="Request a Reset Link">
-          <div className="card__body">
-            {sentTo ? (
-              <p className="register-success">
-                If an account exists for {sentTo}, a reset link is on its way.
-                Check your inbox — the link expires after a short time.
-              </p>
-            ) : (
-              <form onSubmit={handleSubmit} noValidate>
-                <TextInput
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  required
-                />
+          {sentTo ? (
+            <p className="register-success">
+              If an account exists for {sentTo}, a reset link is on its way.
+              Check your inbox, the link expires after a short time.
+            </p>
+          ) : (
+            <form onSubmit={handleSubmit} noValidate>
+              <TextInput
+                label="Email Address"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+              />
 
-                <ErrorMessage>{error}</ErrorMessage>
+              <ErrorMessage>{error}</ErrorMessage>
 
-                <div className="form-options form-options--spaced">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="lg"
-                    fullWidth
-                    disabled={submitting}
-                  >
-                    {submitting ? "SENDING LINK..." : "Send Reset Link"}
-                  </Button>
-                </div>
-              </form>
-            )}
-          </div>
+              <div className="form-options form-options--spaced">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  disabled={submitting}
+                >
+                  {submitting ? "SENDING LINK..." : "Send Reset Link"}
+                </Button>
+              </div>
+            </form>
+          )}
         </Card>
 
         <div className="divider" />

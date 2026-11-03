@@ -69,7 +69,7 @@ export function ResetPassword() {
     const supabase = getSupabase();
     if (!supabase) {
       setError(
-        "Password reset isn't available yet — authentication is still being configured.",
+        "Password reset isn't available yet, authentication is still being configured.",
       );
       return;
     }
@@ -113,69 +113,67 @@ export function ResetPassword() {
 
       <section className="register-layout">
         <Card eyebrow="Reset Password" title="Choose a New Password">
-          <div className="card__body">
-            {linkStatus === "checking" && (
-              <p className="register-success">
-                Checking your reset link...
-              </p>
-            )}
+          {linkStatus === "checking" && (
+            <p className="register-success">
+              Checking your reset link...
+            </p>
+          )}
 
-            {linkStatus === "unavailable" && (
-              <ErrorMessage>
-                Password reset isn&apos;t available yet — authentication is
-                still being configured.
-              </ErrorMessage>
-            )}
+          {linkStatus === "unavailable" && (
+            <ErrorMessage>
+              Password reset isn&apos;t available yet, authentication is
+              still being configured.
+            </ErrorMessage>
+          )}
 
-            {linkStatus === "expired" && (
-              <ErrorMessage>
-                This reset link is invalid or has expired. Request a new one
-                to try again.
-              </ErrorMessage>
-            )}
+          {linkStatus === "expired" && (
+            <ErrorMessage>
+              This reset link is invalid or has expired. Request a new one
+              to try again.
+            </ErrorMessage>
+          )}
 
-            {linkStatus === "ready" && !done && (
-              <form onSubmit={handleSubmit} noValidate>
-                <TextInput
-                  label="New Password"
-                  name="password"
-                  type="password"
-                  placeholder="At least 8 characters"
-                  autoComplete="new-password"
-                  required
-                />
+          {linkStatus === "ready" && !done && (
+            <form onSubmit={handleSubmit} noValidate>
+              <TextInput
+                label="New Password"
+                name="password"
+                type="password"
+                placeholder="At least 8 characters"
+                autoComplete="new-password"
+                required
+              />
 
-                <TextInput
-                  label="Confirm Password"
-                  name="confirm"
-                  type="password"
-                  placeholder="Repeat the new password"
-                  autoComplete="new-password"
-                  required
-                />
+              <TextInput
+                label="Confirm Password"
+                name="confirm"
+                type="password"
+                placeholder="Repeat the new password"
+                autoComplete="new-password"
+                required
+              />
 
-                <ErrorMessage>{error}</ErrorMessage>
+              <ErrorMessage>{error}</ErrorMessage>
 
-                <div className="form-options form-options--spaced">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    size="lg"
-                    fullWidth
-                    disabled={submitting}
-                  >
-                    {submitting ? "SAVING..." : "Save New Password"}
-                  </Button>
-                </div>
-              </form>
-            )}
+              <div className="form-options form-options--spaced">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  disabled={submitting}
+                >
+                  {submitting ? "SAVING..." : "Save New Password"}
+                </Button>
+              </div>
+            </form>
+          )}
 
-            {done && (
-              <p className="register-success">
-                Password updated. Taking you back to the login page...
-              </p>
-            )}
-          </div>
+          {done && (
+            <p className="register-success">
+              Password updated. Taking you back to the login page...
+            </p>
+          )}
         </Card>
 
         <div className="divider" />

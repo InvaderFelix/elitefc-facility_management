@@ -53,7 +53,7 @@ export const PROGRAMS: Program[] = [
       },
       {
         title: "Strength and Conditioning Sessions (Twice weekly, 60 minutes)",
-        body: "Football gym sessions focused on movement quality, strength, power, recovery, and coordination — the physical edge, developed the way pro programs develop it.",
+        body: "Football gym sessions focused on movement quality, strength, power, recovery, and coordination, the physical edge, developed the way pro programs develop it.",
       },
       {
         title: "Football Intelligence Session (Weekly, 60 minutes)",
@@ -87,7 +87,7 @@ export const GAP_STATS = [
 export const AUSTRALIA_STALL = [
   "Elite players worldwide debut in senior football at 18 years, 13 days on average. Australian A-League debutants average 19 years, 2 days since 2023–24.",
   "In a full round of senior National Premier Leagues (NPL) for A-League academy sides, the median and most common birth year of starters was 2007 (18- to 19-year-olds). Fewer than 7.3% of starters were 16 or younger.",
-  "Of 300+ players at last year's U16 Emerging Socceroos Championships, only 14 have started a single senior National Premier Leagues (NPL) game this season — most just once.",
+  "Of 300+ players at last year's U16 Emerging Socceroos Championships, only 14 have started a single senior National Premier Leagues (NPL) game this season, most just once.",
   "Australia's own 'golden generation' were playing senior men's football at an average age of 15.4. That's now extremely rare.",
 ];
 
@@ -102,7 +102,7 @@ export const FAQS: Faq[] = [
     id: "who",
     question: "Who is Elite360 for?",
     answer:
-      "Elite360 is for talented footballers on their pathway to the top — available to U13 players through to senior players looking for more.",
+      "Elite360 is for talented footballers on their pathway to the top, available to U13 players through to senior players looking for more.",
   },
   {
     id: "difference",
@@ -120,6 +120,6 @@ export const FAQS: Faq[] = [
     id: "location",
     question: "Where do sessions run?",
     answer:
-      "At Elite Football Training Facilities — 169 Rosamond Road, Maribyrnong VIC 3032. Gym, field training, and classroom sessions under one roof.",
+      "At Elite Football Training Facilities, 169 Rosamond Road, Maribyrnong VIC 3032. Gym, field training, and classroom sessions under one roof.",
   },
 ];

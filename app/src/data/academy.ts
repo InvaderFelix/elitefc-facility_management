@@ -11,7 +11,7 @@ export const EXPLAINERS: PlayerExplainer[] = [
     id: "1",
     title: "First Touch Control",
     description:
-      "Master the first touch — the most important skill in football. Learn how to receive passes under pressure and move into space.",
+      "Master the first touch, the most important skill in football. Learn how to receive passes under pressure and move into space.",
     videoId: "demo1",
     ageGroup: "U7-U10",
   },
@@ -42,6 +42,82 @@ export interface AgeGroup {
   entryRequirements?: string;
 }
 
+export const TRIALS: AgeGroup[] = [
+  {
+    id: "eoi",
+    title: "Trials EOI",
+    ageRange: "Ages 7 to 13 · Free to register",
+    description:
+      "Want to trial with Elite FC? Register your expression of interest and our coaching team will be in touch with trial dates for your age group. There is no cost to register and no obligation, it simply puts your player on our radar for the next trial window.",
+    focus: [
+      "Complete the short EOI form — player name, age group and contact details",
+      "Choose a program: Elite FC teams U7 to U13 (boys, girls and female teams), Elite Clinic small-group training, or goalkeeper training (Saturday mornings)",
+      "Coaches review interest by age group and program",
+      "We email you the trial dates, times and what to bring",
+      "Come along, meet the coaches and play — no obligation",
+    ],
+    entryRequirements:
+      "Made for Pre-Academy and Petite players — try a session with us and then sign up. Register your EOI online.",
+  },
+  {
+    id: "academy-trials",
+    title: "Academy Trials",
+    ageRange: "Academy and up · Contacted and assessed",
+    description:
+      "Academy Trials are a different pathway to the EOI. Only Academy-level players and up are contacted and assessed. Register your interest and our coaching team will arrange your trial.",
+    focus: [
+      "Player details — full name, date of birth, previous clubs",
+      "Playing level — current Kangaroos or Wallabies squad — and any academy experience",
+      "Program selection for the upcoming season, including full-time options",
+      "Emergency contacts plus medical history (allergies, illnesses, medication and past injuries)",
+      "Authority to seek medical assistance and consent to use photo/video content",
+    ],
+    entryRequirements:
+      "Assessment based — trials are for Academy players and up, and we contact you to book the session. Register online to get started.",
+  },
+];
+
+export const CLINICS: AgeGroup[] = [
+  {
+    id: "u8-u9",
+    title: "Skills Clinic",
+    ageRange: "U8 to U9",
+    description:
+      "A weekly skill clinic for our youngest players, building core technique through structured, game-based sessions.",
+    focus: [
+      "Fridays at 4:15pm",
+      "Qualified coaches",
+      "Qualified coaches in our Purpose-built facility",
+    ],
+    entryRequirements: "Registration via your portal is required to secure your spot.",
+  },
+  {
+    id: "u10-u11",
+    title: "Development Clinic",
+    ageRange: "U10 to U11",
+    description:
+      "A weekly skill clinic for developing players, sharpening technique and decision-making in small-sided games.",
+    focus: [
+      "Saturdays at 10am",
+      "Qualified coaches in our Purpose-built facility",
+    ],
+    entryRequirements: "Registration via your portal is required to secure your spot.",
+  },
+  {
+    id: "gk",
+    title: "Goalkeeper Clinic",
+    ageRange: "For GK Specialists",
+    description:
+      "Goalkeeper-specific coaching covering handling, footwork, positioning, and shot-stopping in a dedicated session.",
+    focus: [
+      "Saturday mornings",
+      "Goalkeeper-specific coaching",
+      "Qualified coaches in our Purpose-built facility",
+    ],
+    entryRequirements: "Registration via your portal is required to secure your spot.",
+  },
+];
+
 export const AGE_GROUPS: AgeGroup[] = [
   {
     id: "1",
@@ -62,7 +138,7 @@ export const AGE_GROUPS: AgeGroup[] = [
     title: "Pre-Academy",
     ageRange: "Ages 5 to 7",
     description:
-      "Pre-Academy takes the fun of Petite and adds real structure. Players learn fundamentals in a way that keeps them engaged and moving — the bridge between first-time play and MiniRoos.",
+      "Pre-Academy takes the fun of Petite and adds real structure. Players learn fundamentals in a way that keeps them engaged and moving, the bridge between first-time play and MiniRoos.",
     focus: [
       "Dribbling, passing, first touch, and game sense",
       "Structured skill sessions",
@@ -75,12 +151,12 @@ export const AGE_GROUPS: AgeGroup[] = [
     title: "Academy",
     ageRange: "Ages 7 to 13",
     description:
-      "Academy is Elite FC's MiniRoos program. Small-sided football means more touches, more decisions, and more time on the ball — delivered with a real curriculum.",
+      "Academy is Elite FC's MiniRoos program. Small-sided football means more touches, more decisions, and more time on the ball, delivered with a real curriculum.",
     focus: [
       "MiniRoos small-sided football",
       "Qualified coaches and development curriculum",
       "Moonee Valley Knights FC partnership for Football Victoria competition",
-      "Pathway to Juniors, Seniors, and <span className=\"elite360-green\">Elite360</span> / National Premier Leagues (NPL)",
+      "Pathway to Juniors, Seniors, and Elite360 / National Premier Leagues (NPL)",
       "National tournaments and international tour opportunities",
     ],
   },
@@ -98,5 +174,21 @@ export const AGE_GROUPS: AgeGroup[] = [
     ],
     entryRequirements:
       "Trial and selection required. Partnership with Moonee Valley Knights FC.",
+  },
+  {
+    id: "5",
+    title: "School Holiday Program",
+    ageRange: "Ages 7 to 12",
+    description:
+      "Keep the kids busy these school holidays with full days of football, games, and fun in a professional, safe environment, no experience necessary.",
+    focus: [
+      "Full day 9am–3pm, $120 per day, lunch included",
+      "Half day 9am–12pm, $80 per day",
+      "Runs on selected weekdays across the school holidays",
+      "Hosted at 169 Rosamond Rd, Maribyrnong, indoor and outdoor pitches",
+      "Book early to secure your child's place",
+    ],
+    entryRequirements:
+      "Book online via your portal. Refunds are only available for medical reasons with a medical certificate.",
   },
 ];

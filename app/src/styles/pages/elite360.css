@@ -1,0 +1,7 @@
+@layer pages {
+  .elite360-page .eyebrow,
+  .elite360-page .card__eyebrow,
+  .elite360-page .login-callout__kicker {
+    color: var(--elite360-green);
+  }
+}

@@ -4,7 +4,7 @@ export interface ServiceCard {
   body: string;
   items: string[];
   message: string;
-  links: { to: string; label: string; variant: "primary" | "secondary" }[];
+  links: { to?: string; label: string; variant: "primary" | "secondary" }[];
 }
 
 export const SERVICE_CARDS: ServiceCard[] = [
@@ -13,16 +13,16 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: "Pitch Hire",
     body: "FIFA-grade indoor and outdoor pitches, open 7 days.",
     items: [
-      "Indoor 7-a-side — $240 per hour",
-      "Indoor 5-a-side — $120 per hour",
-      "Outdoor 5-a-side — $110 per hour",
+      "Indoor 7-a-side, $240 per hour",
+      "Indoor 5-a-side, $120 per hour",
+      "Outdoor 5-a-side, $110 per hour",
     ],
     message:
-      "Log in to book a pitch for your next session — or register if you haven't created an account yet.",
+      "Log in to book a pitch for your next session, or register if you haven't created an account yet.",
     links: [
-      { to: "/bookpitch", label: "Book a Pitch", variant: "primary" },
-      { to: "/", label: "Log in", variant: "secondary" },
+      { to: "/", label: "Log in", variant: "primary" },
       { to: "/register", label: "Register", variant: "secondary" },
+      { to: "/bookpitch", label: "Book a Pitch", variant: "secondary" },
     ],
   },
   {
@@ -30,15 +30,16 @@ export const SERVICE_CARDS: ServiceCard[] = [
     title: "Leagues",
     body: "Social and competitive football all year round with live results.",
     items: [
-      "Adult League — Monday 7-a-side social · Tuesday intermediate",
-      "Junior League — Elite Summer League (ESL) competition",
+      "Adult League, Monday 7-a-side social · Tuesday intermediate",
+      "Junior League, Elite Summer League (ESL) competition",
       "Fixtures, results & replays published live",
     ],
     message:
-      "Log in to enter your team into a league — or register if you haven't created an account yet.",
+      "Log in to enter your team into a league, or register if you haven't created an account yet.",
     links: [
       { to: "/", label: "Log in", variant: "primary" },
       { to: "/register", label: "Register", variant: "secondary" },
+      { label: "View Fixtures", variant: "secondary" },
     ],
   },
   {
@@ -71,9 +72,9 @@ export const SERVICE_CARDS: ServiceCard[] = [
     message:
       "Log in to book the gym, register for an account, or contact us to enquire about membership.",
     links: [
-      { to: "/", label: "Log in", variant: "secondary" },
+      { to: "/", label: "Log in", variant: "primary" },
       { to: "/register", label: "Register", variant: "secondary" },
-      { to: "/contact", label: "Enquire", variant: "primary" },
+      { to: "/contact", label: "Enquire", variant: "secondary" },
     ],
   },
   {

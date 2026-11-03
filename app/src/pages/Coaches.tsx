@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import "../styles/pages/coaches.css";
+import { LinkButton } from "../components/LinkButton";
 import { PageHero } from "../components/PageHero";
 import { Lightbox } from "../components/Lightbox";
 import { COACHES_BY_ID, ORDERED_IDS, type Coach } from "../data/coaches";
@@ -165,14 +166,20 @@ export function Coaches() {
           </div>
 
           <div className="coach-lightbox__meta" key={`${selected.id}-meta`}>
+            <LinkButton
+              to="/bookcoach"
+              size="lg"
+              className="coach-lightbox__book"
+              onClick={closeLightbox}
+            >
+              Book Now
+            </LinkButton>
+
             <span className="coach-name">{renderName(selected.name)}</span>
             <span className="coach-role">{selected.role}</span>
 
             <div className="coach-lightbox__divider" />
 
-            <strong className="coach-lightbox__specialty">
-              {selected.specialty}
-            </strong>
             <p className="coach-lightbox__experience">{selected.experience}</p>
             <p className="coach-lightbox__bio">{selected.bio}</p>
           </div>

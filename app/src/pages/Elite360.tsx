@@ -1,3 +1,4 @@
+import "../styles/pages/elite360.css";
 import { Link } from "react-router-dom";
 import { Card } from "../components/Card";
 import { PageHero } from "../components/PageHero";
@@ -10,22 +11,23 @@ import {
 
 export function Elite360() {
   return (
-    <main className="content">
+    <main className="content elite360-page">
       <PageHero
-        eyebrow={<span style={{ color: "var(--elite360-green)" }}>Elite360</span> as any}
+        eyebrow="Elite360"
         title="Professional Athlete"
         accent="Development"
-        description="Elite performance coaching from U13 to U18 — and beyond. Full-time and part-time programs built to develop talented footballers on their pathway to the top."
+        accentClassName="elite360-green"
+        description="Elite performance coaching from U13 to U18, and beyond. Full-time and part-time programs built to develop talented footballers on their pathway to the top."
       />
 
       <section className="academy-services">
-        <div className="card">
+        <Card>
           <div className="section-heading">
             <h2>The Gap <span className="elite360-green">Elite360</span> Is Built to Close</h2>
             <p>
               Australian football has a well-documented problem: kids are
               selected early on the wrong signals, then stall exactly when it
-              matters most. The talent isn't the issue — the pathway above U14
+              matters most. The talent isn't the issue, the pathway above U14
               is.
             </p>
           </div>
@@ -38,7 +40,7 @@ export function Elite360() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </section>
 
 
@@ -48,7 +50,7 @@ export function Elite360() {
           <h2>Two Programs. One Pathway.</h2>
           <p>
             <span className="elite360-green">Elite360</span> is for talented footballers on their pathway to the top. Available to
-            U13 players through senior players looking for more — book your
+            U13 players through senior players looking for more, book your
             assessment and start the journey today.
           </p>
         </div>
@@ -70,17 +72,15 @@ export function Elite360() {
                 <p className="program-entry">{program.pricing}</p>
 
                 <Card eyebrow="What's Included" title="Inside the Program">
-                  <div className="card__body">
-                    <ul>
-                      {program.included.map((item) => (
-                        <li key={item.title}>
-                          <strong>{item.title}</strong>
-                          <br />
-                          {item.body}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <ul>
+                    {program.included.map((item) => (
+                      <li key={item.title}>
+                        <strong>{item.title}</strong>
+                        <br />
+                        {item.body}
+                      </li>
+                    ))}
+                  </ul>
                 </Card>
 
                 <p className="program-entry">{program.forWhom}</p>
@@ -111,7 +111,7 @@ export function Elite360() {
           <div className="login-callout__kicker">READY TO TRAIN</div>
           <h2>Book Your Free Trial and Start Your Pathway to Senior Football</h2>
           <p>
-            Book your assessment and start the journey today — email{" "}
+            Book your assessment and start the journey today, email{" "}
             <a href="mailto:bookings@elitefootballcentre.com.au">
               bookings@elitefootballcentre.com.au
             </a>{" "}
@@ -129,18 +129,16 @@ export function Elite360() {
         </div>
 
         <Card eyebrow="PLAYERS STALL BETWEEN 16 AND 19" title="In Australia Specifically">
-          <div className="card__body">
-            <p>
-              Coaches and former internationals broadly agree Australian 15- to
-              16-year-olds match European peers technically, then diverge. The
-              data backs it up:
-            </p>
-            <ul>
-              {AUSTRALIA_STALL.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
+          <p>
+            Coaches and former internationals broadly agree Australian 15- to
+            16-year-olds match European peers technically, then diverge. The
+            data backs it up:
+          </p>
+          <ul>
+            {AUSTRALIA_STALL.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </Card>
       </section>
     </main>

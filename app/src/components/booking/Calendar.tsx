@@ -10,13 +10,15 @@ export interface BookingLegendItem {
   swatchClass: string;
 }
 
+const noBlockedSlots = (): BlockedSlot[] => [];
+
 export interface CalendarProps {
-  courts: Court[];
-  startMinutes: number;
-  endMinutes: number;
-  interval: number;
+  courts?: Court[];
+  startMinutes?: number;
+  endMinutes?: number;
+  interval?: number;
   today?: Date;
-  getBlockedSlotsForDate: (date: Date) => BlockedSlot[];
+  getBlockedSlotsForDate?: (date: Date) => BlockedSlot[];
   legendItems?: BookingLegendItem[];
   legendNote?: string;
   onSelectionChange?: (slots: SelectedSlot[], bookings: BookingLine[], total: number) => void;
@@ -28,12 +30,12 @@ export interface CalendarProps {
 }
 
 export function Calendar({
-  courts,
-  startMinutes,
-  endMinutes,
-  interval,
+  courts = [],
+  startMinutes = 0,
+  endMinutes = 24 * 60,
+  interval = 30,
   today = new Date(),
-  getBlockedSlotsForDate,
+  getBlockedSlotsForDate = noBlockedSlots,
   legendItems = [],
   legendNote = "",
   onSelectionChange,

@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
-  COURTS,
-  END_MINUTES,
+  PITCH_HIRE_COURTS,
+  PITCH_HIRE_END_MINUTES,
   INTERVAL,
-  START_MINUTES,
+  PITCH_HIRE_START_MINUTES,
   addDays,
   buildBookings,
   buildSelectedSlots,
@@ -11,7 +11,7 @@ import {
   dateKey,
   extendRange,
   getBlockLabel,
-  getBlockedSlots,
+  getPitchHireBlockedSlots,
   isSlotBlocked,
   minutesToLabel,
   type BlockedSlot,
@@ -72,12 +72,12 @@ describe('addDays', () => {
   });
 });
 
-describe('getBlockedSlots', () => {
+describe('getPitchHireBlockedSlots', () => {
   const asTuple = (slots: BlockedSlot[]) =>
     slots.map((b) => [b.courtId, b.start, b.end, b.label]);
 
   it('blocks Saturday coaching on all three courts (07 Nov 2026)', () => {
-    expect(asTuple(getBlockedSlots(d(2026, 11, 7)))).toEqual([
+    expect(asTuple(getPitchHireBlockedSlots(d(2026, 11, 7)))).toEqual([
       ['in1', 8 * 60, 13 * 60 + 30, 'Coaching'],
       ['in2', 9 * 60, 12 * 60, 'Coaching'],
       ['out1', 9 * 60, 12 * 60, 'Coaching'],
@@ -85,7 +85,7 @@ describe('getBlockedSlots', () => {
   });
 
   it('blocks weekday after-school coaching plus Mon/Tue league on Monday', () => {
-    const slots = getBlockedSlots(d(2026, 10, 5));
+    const slots = getPitchHireBlockedSlots(d(2026, 10, 5));
     expect(slots).toHaveLength(6);
     expect(slots.filter((b) => b.label === 'Coaching')).toHaveLength(3);
     expect(slots.filter((b) => b.label === 'League Play')).toHaveLength(3);
@@ -96,17 +96,17 @@ describe('getBlockedSlots', () => {
   });
 
   it('adds league play on Tuesday too', () => {
-    expect(getBlockedSlots(d(2026, 10, 6))).toHaveLength(6);
+    expect(getPitchHireBlockedSlots(d(2026, 10, 6))).toHaveLength(6);
   });
 
   it('has only after-school coaching midweek', () => {
-    const slots = getBlockedSlots(d(2026, 10, 7));
+    const slots = getPitchHireBlockedSlots(d(2026, 10, 7));
     expect(slots).toHaveLength(3);
     expect(slots.every((b) => b.label === 'Coaching')).toBe(true);
   });
 
   it('leaves a plain Sunday free', () => {
-    expect(getBlockedSlots(d(2026, 10, 4))).toEqual([]);
+    expect(getPitchHireBlockedSlots(d(2026, 10, 4))).toEqual([]);
   });
 
   it('blocks the Elite Summer League (ESL) tournament on Sundays in Nov 2026 and 1–13 Dec 2026', () => {
@@ -115,20 +115,20 @@ describe('getBlockedSlots', () => {
       ['in2', 8 * 60, 13 * 60, 'Elite Summer League (ESL) Tournament'],
       ['out1', 8 * 60, 13 * 60, 'Elite Summer League (ESL) Tournament'],
     ];
-    expect(asTuple(getBlockedSlots(d(2026, 11, 1)))).toEqual(expected);
-    expect(asTuple(getBlockedSlots(d(2026, 12, 13)))).toEqual(expected);
+    expect(asTuple(getPitchHireBlockedSlots(d(2026, 11, 1)))).toEqual(expected);
+    expect(asTuple(getPitchHireBlockedSlots(d(2026, 12, 13)))).toEqual(expected);
   });
 
   it('stops the Elite Summer League (ESL) window after 13 Dec 2026', () => {
-    expect(getBlockedSlots(d(2026, 12, 20))).toEqual([]);
+    expect(getPitchHireBlockedSlots(d(2026, 12, 20))).toEqual([]);
   });
 
   it('does not run Elite Summer League (ESL) in other years', () => {
-    expect(getBlockedSlots(d(2027, 11, 7))).toEqual([]);
+    expect(getPitchHireBlockedSlots(d(2027, 11, 7))).toEqual([]);
   });
 
   it('Elite Summer League (ESL) applies to Sundays only (Saturday 07 Nov gets normal coaching)', () => {
-    expect(getBlockedSlots(d(2026, 11, 7)).every((b) => b.label === 'Coaching')).toBe(true);
+    expect(getPitchHireBlockedSlots(d(2026, 11, 7)).every((b) => b.label === 'Coaching')).toBe(true);
   });
 });
 
@@ -197,17 +197,17 @@ describe('buildSelectedSlots', () => {
   const never: SlotBlockPredicate = () => false;
 
   it('returns nothing for an empty selection', () => {
-    expect(buildSelectedSlots({}, never)).toEqual([]);
+    expect(buildSelectedSlots({}, never, PITCH_HIRE_COURTS)).toEqual([]);
   });
 
   it('expands a single tap into one half-hour slot with a label', () => {
-    const [first] = buildSelectedSlots({ in1: { anchor: 600, target: 600 } }, never);
+    const [first] = buildSelectedSlots({ in1: { anchor: 600, target: 600 } }, never, PITCH_HIRE_COURTS);
     expect(first).toMatchObject({ start: 600, end: 630, label: '10:00am-10:30am' });
     expect(first.court.id).toBe('in1');
   });
 
   it('expands a range into contiguous half-hour slots', () => {
-    const slots = buildSelectedSlots({ in1: { anchor: 600, target: 660 } }, never);
+    const slots = buildSelectedSlots({ in1: { anchor: 600, target: 660 } }, never, PITCH_HIRE_COURTS);
     expect(slots.map((s) => s.label)).toEqual([
       '10:00am-10:30am',
       '10:30am-11:00am',
@@ -216,21 +216,22 @@ describe('buildSelectedSlots', () => {
   });
 
   it('ignores unknown court ids', () => {
-    expect(buildSelectedSlots({ nope: { anchor: 600, target: 600 } }, never)).toEqual([]);
+    expect(buildSelectedSlots({ nope: { anchor: 600, target: 600 } }, never, PITCH_HIRE_COURTS)).toEqual([]);
   });
 
   it('sorts the flattened slots by label across courts', () => {
     const slots = buildSelectedSlots(
       { in2: { anchor: 660, target: 660 }, in1: { anchor: 600, target: 600 } },
       never,
+      PITCH_HIRE_COURTS,
     );
     expect(slots.map((s) => s.label)).toEqual(['10:00am-10:30am', '11:00am-11:30am']);
   });
 });
 
 describe('buildBookings', () => {
-  const in1 = COURTS.find((c) => c.id === 'in1')!;
-  const in2 = COURTS.find((c) => c.id === 'in2')!;
+  const in1 = PITCH_HIRE_COURTS.find((c) => c.id === 'in1')!;
+  const in2 = PITCH_HIRE_COURTS.find((c) => c.id === 'in2')!;
 
   it('merges adjacent half-hour slots into one line', () => {
     const lines = buildBookings([slot(in1, 600, 630), slot(in1, 630, 660)]);
@@ -260,9 +261,9 @@ describe('buildBookings', () => {
 });
 
 describe('computeTotal', () => {
-  const in1 = COURTS.find((c) => c.id === 'in1')!;
-  const in2 = COURTS.find((c) => c.id === 'in2')!;
-  const out1 = COURTS.find((c) => c.id === 'out1')!;
+  const in1 = PITCH_HIRE_COURTS.find((c) => c.id === 'in1')!;
+  const in2 = PITCH_HIRE_COURTS.find((c) => c.id === 'in2')!;
+  const out1 = PITCH_HIRE_COURTS.find((c) => c.id === 'out1')!;
 
   it('is zero with no slots', () => {
     expect(computeTotal([])).toBe(0);
@@ -280,13 +281,13 @@ describe('computeTotal', () => {
 
 describe('constants', () => {
   it('exposes the grid bounds and interval', () => {
-    expect(START_MINUTES).toBe(7 * 60);
-    expect(END_MINUTES).toBe(23 * 60);
+    expect(PITCH_HIRE_START_MINUTES).toBe(7 * 60);
+    expect(PITCH_HIRE_END_MINUTES).toBe(23 * 60);
     expect(INTERVAL).toBe(30);
   });
 
   it('lists the demo courts', () => {
-    expect(COURTS).toHaveLength(3);
-    expect(COURTS.map((c) => c.id)).toEqual(['in1', 'in2', 'out1']);
+    expect(PITCH_HIRE_COURTS).toHaveLength(3);
+    expect(PITCH_HIRE_COURTS.map((c) => c.id)).toEqual(['in1', 'in2', 'out1']);
   });
 });

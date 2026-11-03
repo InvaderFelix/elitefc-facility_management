@@ -1,7 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
-
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
-type ButtonSize = 'sm' | 'md' | 'lg';
+import { buttonClasses, type ButtonSize, type ButtonVariant } from './buttonClasses';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -29,16 +27,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const classes = [
-      'btn',
-      `btn--${variant}`,
-      `btn--${size}`,
-      fullWidth ? 'btn--full' : '',
-      isLoading ? 'btn--loading' : '',
-      className,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classes = `${buttonClasses({ variant, size, fullWidth, className })}${
+      isLoading ? ' btn--loading' : ''
+    }`;
 
     return (
       <button

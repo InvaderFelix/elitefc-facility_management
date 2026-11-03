@@ -1,8 +1,14 @@
+import "../styles/pages/home.css";
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getSupabase } from "../lib/supabase";
+import { Button } from "../components/Button";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { PageHero } from "../components/PageHero";
+import { TextInput } from "../components/TextInput";
+
+const SPONSORS = Array.from({ length: 12 }, (_, index) => `Sponsor ${index + 1}`);
+const MARQUEE_COPIES = 3;
 
 export function Home() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -92,27 +98,25 @@ export function Home() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div className="field">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                autoComplete="email"
-                required
-              />
-            </div>
+            <TextInput
+              label="Email"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              required
+            />
 
-            <div className="field">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                required
-              />
-            </div>
+            <TextInput
+              label="Password"
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              required
+            />
 
             <div className="form-options">
               <label className="remember">
@@ -127,13 +131,14 @@ export function Home() {
 
             <ErrorMessage>{error}</ErrorMessage>
 
-            <button
+            <Button
               type="submit"
-              className="login-button"
+              size="lg"
+              fullWidth
               disabled={isLoggingIn}
             >
               {isLoggingIn ? "LOGGING IN..." : "LOG IN"}
-            </button>
+            </Button>
           </form>
 
           <div className="divider" />
@@ -144,6 +149,25 @@ export function Home() {
           </div>
         </section>
       </section>
+
+      <div className="sponsors-marquee" role="region" aria-label="Club sponsors">
+        <ul className="sponsors-marquee__track">
+          {Array.from({ length: MARQUEE_COPIES * SPONSORS.length }, (_, index) => {
+            const copy = Math.floor(index / SPONSORS.length);
+            const sponsor = SPONSORS[index % SPONSORS.length];
+
+            return (
+              <li
+                key={`${copy}-${sponsor}`}
+                className="sponsor-card"
+                aria-hidden={copy > 0 ? true : undefined}
+              >
+                {sponsor}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </main>
   );
 }

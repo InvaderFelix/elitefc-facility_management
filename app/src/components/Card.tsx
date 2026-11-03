@@ -5,6 +5,8 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   eyebrow?: string;
   title?: string;
   footer?: ReactNode;
+  /* Content rendered as a direct child, e.g. an absolutely positioned overlay. */
+  overlay?: ReactNode;
   children: ReactNode;
 }
 
@@ -12,7 +14,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
  * Generic content container for page sections, cards in a grid and portal
  * panels. Header renders only if eyebrow or title is given.
  */
-export function Card({ eyebrow, title, footer, children, className = '', ...rest }: CardProps) {
+export function Card({ eyebrow, title, footer, overlay, children, className = '', ...rest }: CardProps) {
   const hasHeader = Boolean(eyebrow || title);
 
   return (
@@ -25,6 +27,7 @@ export function Card({ eyebrow, title, footer, children, className = '', ...rest
       )}
       <div className="card__body">{children}</div>
       {footer && <div className="card__footer">{footer}</div>}
+      {overlay}
     </div>
   );
 }

@@ -304,6 +304,12 @@
     display: none;
   }
 
+  .coach-lightbox__book {
+    align-self: flex-start;
+
+    margin-bottom: 18px;
+  }
+
   .coach-lightbox__meta .coach-name {
     font-family: "Barlow Condensed", sans-serif;
     font-size: 34px;
@@ -335,13 +341,6 @@
     margin: 18px 0;
 
     background: var(--border);
-  }
-
-  .coach-lightbox__specialty {
-    color: var(--red);
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
   }
 
   .coach-lightbox__experience {

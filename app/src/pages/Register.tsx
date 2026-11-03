@@ -344,286 +344,282 @@ export function Register() {
 
       <section className="register-layout">
         <Card eyebrow="Registration" title="Parent / Guardian Details">
-          <div className="card__body">
-            <form onSubmit={handleSubmit} noValidate>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="register-address__row">
+              <TextInput
+                label="First Name"
+                name="firstName"
+                type="text"
+                placeholder="First name"
+                required
+                error={errors.firstName}
+                onBlur={(event) => handleNameBlur(event, "firstName")}
+                onKeyDown={handleNameKeyDown}
+                onChange={handleNameChange}
+              />
+
+              <TextInput
+                label="Surname"
+                name="surname"
+                type="text"
+                placeholder="Surname"
+                required
+                error={errors.surname}
+                onBlur={(event) => handleNameBlur(event, "surname")}
+                onKeyDown={handleNameKeyDown}
+                onChange={handleNameChange}
+              />
+            </div>
+
+            <TextInput
+              label="Email Address"
+              name="parentEmail"
+              type="email"
+              placeholder="you@example.com"
+              required
+              error={errors.email}
+              onBlur={handleEmailBlur}
+            />
+
+            <TextInput
+              label="Phone Number"
+              name="parentPhone"
+              type="tel"
+              placeholder="04xx xxx xxx"
+              required
+              error={errors.phone}
+              onBlur={handlePhoneBlur}
+              onKeyDown={handlePhoneKeyDown}
+              onChange={handlePhoneChange}
+            />
+
+            <TextInput
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="At least 8 characters"
+              autoComplete="new-password"
+              required
+              error={errors.password}
+              hint={breachNotice || undefined}
+              onBlur={handlePasswordBlur}
+              onChange={() => setBreachNotice("")}
+            />
+
+            <TextInput
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              placeholder="Re-enter password"
+              autoComplete="new-password"
+              required
+              error={errors.password}
+            />
+
+            <fieldset className="register-address">
+              <legend>Address</legend>
+
+              <TextInput
+                label="Address Lookup"
+                name="addressLookup"
+                type="text"
+                placeholder="Start typing your address"
+                value={lookup.query}
+                onChange={(event) => lookup.search(event.target.value)}
+                onBlur={() => {
+                  window.setTimeout(lookup.dismiss, 150);
+                }}
+                hint={
+                  lookup.loading ? (
+                    <span className="lookup-loading">
+                      <span className="lookup-spinner" aria-hidden="true" />
+                      Searching...
+                    </span>
+                  ) : undefined
+                }
+                error={lookup.error}
+              />
+
+              {lookup.showSuggestions && lookup.suggestions.length > 0 && (
+                <ul className="lookup-suggestions">
+                  {lookup.suggestions.map((suggestion, index) => (
+                    <li key={`${suggestion.displayName}-${index}`}>
+                      <button
+                        type="button"
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                          applyAddressSuggestion(suggestion);
+                        }}
+                      >
+                        {suggestion.displayName}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               <div className="register-address__row">
                 <TextInput
-                  label="First Name"
-                  name="firstName"
+                  label="Unit / Flat"
+                  name="unitNumber"
                   type="text"
-                  placeholder="First name"
-                  required
-                  error={errors.firstName}
-                  onBlur={(event) => handleNameBlur(event, "firstName")}
-                  onKeyDown={handleNameKeyDown}
-                  onChange={handleNameChange}
+                  placeholder="e.g. 5"
+                  ref={unitNumberRef}
                 />
 
                 <TextInput
-                  label="Surname"
-                  name="surname"
+                  label="Street Number"
+                  name="houseNumber"
                   type="text"
-                  placeholder="Surname"
+                  placeholder="e.g. 12"
                   required
-                  error={errors.surname}
-                  onBlur={(event) => handleNameBlur(event, "surname")}
-                  onKeyDown={handleNameKeyDown}
-                  onChange={handleNameChange}
+                  ref={houseNumberRef}
+                  error={errors.houseNumber}
+                  onChange={revalidate("houseNumber", validateHouseNumber)}
                 />
               </div>
 
               <TextInput
-                label="Email Address"
-                name="parentEmail"
-                type="email"
-                placeholder="you@example.com"
+                label="Street Name"
+                name="streetName"
+                type="text"
+                placeholder="e.g. Smith Street"
                 required
-                error={errors.email}
-                onBlur={handleEmailBlur}
+                ref={streetNameRef}
+                error={errors.streetName}
+                onChange={revalidate("streetName", validateStreetName)}
               />
 
-              <TextInput
-                label="Phone Number"
-                name="parentPhone"
-                type="tel"
-                placeholder="04xx xxx xxx"
-                required
-                error={errors.phone}
-                onBlur={handlePhoneBlur}
-                onKeyDown={handlePhoneKeyDown}
-                onChange={handlePhoneChange}
-              />
-
-              <TextInput
-                label="Password"
-                name="password"
-                type="password"
-                placeholder="At least 8 characters"
-                autoComplete="new-password"
-                required
-                error={errors.password}
-                hint={breachNotice || undefined}
-                onBlur={handlePasswordBlur}
-                onChange={() => setBreachNotice("")}
-              />
-
-              <TextInput
-                label="Confirm Password"
-                name="confirmPassword"
-                type="password"
-                placeholder="Re-enter password"
-                autoComplete="new-password"
-                required
-                error={errors.password}
-              />
-
-              <fieldset className="register-address">
-                <legend>Address</legend>
-
+              <div className="register-address__row">
                 <TextInput
-                  label="Address Lookup"
-                  name="addressLookup"
+                  label="Suburb"
+                  name="suburb"
                   type="text"
-                  placeholder="Start typing your address"
-                  value={lookup.query}
-                  onChange={(event) => lookup.search(event.target.value)}
-                  onBlur={() => {
-                    window.setTimeout(lookup.dismiss, 150);
-                  }}
-                  hint={
-                    lookup.loading ? (
-                      <span className="lookup-loading">
-                        <span className="lookup-spinner" aria-hidden="true" />
-                        Searching...
-                      </span>
-                    ) : undefined
-                  }
-                  error={lookup.error}
-                />
-
-                {lookup.showSuggestions && lookup.suggestions.length > 0 && (
-                  <ul className="lookup-suggestions">
-                    {lookup.suggestions.map((suggestion, index) => (
-                      <li key={`${suggestion.displayName}-${index}`}>
-                        <button
-                          type="button"
-                          onMouseDown={(event) => {
-                            event.preventDefault();
-                            applyAddressSuggestion(suggestion);
-                          }}
-                        >
-                          {suggestion.displayName}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                <div className="register-address__row">
-                  <TextInput
-                    label="Unit / Flat"
-                    name="unitNumber"
-                    type="text"
-                    placeholder="e.g. 5"
-                    ref={unitNumberRef}
-                  />
-
-                  <TextInput
-                    label="Street Number"
-                    name="houseNumber"
-                    type="text"
-                    placeholder="e.g. 12"
-                    required
-                    ref={houseNumberRef}
-                    error={errors.houseNumber}
-                    onChange={revalidate("houseNumber", validateHouseNumber)}
-                  />
-                </div>
-
-                <TextInput
-                  label="Street Name"
-                  name="streetName"
-                  type="text"
-                  placeholder="e.g. Smith Street"
+                  placeholder="Suburb"
                   required
-                  ref={streetNameRef}
-                  error={errors.streetName}
-                  onChange={revalidate("streetName", validateStreetName)}
+                  ref={suburbRef}
+                  error={errors.suburb}
+                  onChange={revalidate("suburb", validateSuburb)}
                 />
 
+                <TextInput
+                  label="Postcode"
+                  name="postcode"
+                  type="text"
+                  placeholder="3000"
+                  required
+                  ref={postcodeRef}
+                  error={errors.postcode}
+                  onChange={revalidate("postcode", validatePostcode)}
+                />
+              </div>
+            </fieldset>
+
+            <div className="divider" />
+
+            {children.map((child, index) => (
+              <Card key={child.id} title={childHeading(index)}>
                 <div className="register-address__row">
                   <TextInput
-                    label="Suburb"
-                    name="suburb"
+                    label="First Name"
+                    name={`child-${child.id}-firstName`}
                     type="text"
-                    placeholder="Suburb"
+                    placeholder="Child's first name"
                     required
-                    ref={suburbRef}
-                    error={errors.suburb}
-                    onChange={revalidate("suburb", validateSuburb)}
+                    error={childErrors[child.id]?.firstName}
+                    onBlur={(event) => handleChildNameBlur(event, child.id, "firstName")}
+                    onKeyDown={handleNameKeyDown}
+                    onChange={handleNameChange}
                   />
 
                   <TextInput
-                    label="Postcode"
-                    name="postcode"
+                    label="Surname"
+                    name={`child-${child.id}-surname`}
                     type="text"
-                    placeholder="3000"
+                    placeholder="Child's surname"
                     required
-                    ref={postcodeRef}
-                    error={errors.postcode}
-                    onChange={revalidate("postcode", validatePostcode)}
+                    error={childErrors[child.id]?.surname}
+                    onBlur={(event) => handleChildNameBlur(event, child.id, "surname")}
+                    onKeyDown={handleNameKeyDown}
+                    onChange={handleNameChange}
                   />
                 </div>
-              </fieldset>
 
-              <div className="divider" />
+                <DateInput
+                  label="Date of Birth"
+                  name={`child-${child.id}-dob`}
+                  required
+                  maxDate={TODAY}
+                  error={childErrors[child.id]?.dob}
+                  onBlur={(event) => handleChildDobBlur(event, child.id)}
+                />
 
-              {children.map((child, index) => (
-                <Card key={child.id} title={childHeading(index)}>
-                  <div className="card__body">
-                    <div className="register-address__row">
-                      <TextInput
-                        label="First Name"
-                        name={`child-${child.id}-firstName`}
-                        type="text"
-                        placeholder="Child's first name"
-                        required
-                        error={childErrors[child.id]?.firstName}
-                        onBlur={(event) => handleChildNameBlur(event, child.id, "firstName")}
-                        onKeyDown={handleNameKeyDown}
-                        onChange={handleNameChange}
-                      />
-
-                      <TextInput
-                        label="Surname"
-                        name={`child-${child.id}-surname`}
-                        type="text"
-                        placeholder="Child's surname"
-                        required
-                        error={childErrors[child.id]?.surname}
-                        onBlur={(event) => handleChildNameBlur(event, child.id, "surname")}
-                        onKeyDown={handleNameKeyDown}
-                        onChange={handleNameChange}
-                      />
-                    </div>
-
-                    <DateInput
-                      label="Date of Birth"
-                      name={`child-${child.id}-dob`}
-                      required
-                      maxDate={TODAY}
-                      error={childErrors[child.id]?.dob}
-                      onBlur={(event) => handleChildDobBlur(event, child.id)}
-                    />
-
-                    {children.length > 1 && (
-                      <div className="remove-child-row">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeChild(child.id)}
-                        >
-                          Remove Child
-                        </Button>
-                      </div>
-                    )}
+                {children.length > 1 && (
+                  <div className="remove-child-row">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeChild(child.id)}
+                    >
+                      Remove Child
+                    </Button>
                   </div>
-                </Card>
-              ))}
+                )}
+              </Card>
+            ))}
 
-              <div className="add-child-row">
-                <Button variant="secondary" fullWidth onClick={addChild}>
-                  + Add Another Child
-                </Button>
-              </div>
-
-              <div className="form-options form-options--spaced">
-                <label className="remember">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    name="terms"
-                    required
-                    onChange={(event) => {
-                      if (errors.terms) {
-                        setFieldError(
-                          "terms",
-                          event.target.checked
-                            ? undefined
-                            : "You must agree to the terms and conditions",
-                        );
-                      }
-                    }}
-                  />
-                  <span>
-                    I agree to the{" "}
-                    <button type="button" className="terms-link" onClick={openTerms}>
-                      terms &amp; conditions
-                    </button>
-                  </span>
-                </label>
-                <ErrorMessage>{errors.terms}</ErrorMessage>
-              </div>
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                fullWidth
-                disabled={submitting || done}
-              >
-                {submitting ? "CREATING ACCOUNT..." : "Create Account"}
+            <div className="add-child-row">
+              <Button variant="secondary" fullWidth onClick={addChild}>
+                + Add Another Child
               </Button>
+            </div>
 
-              <ErrorMessage>{error}</ErrorMessage>
+            <div className="form-options form-options--spaced">
+              <label className="remember">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  required
+                  onChange={(event) => {
+                    if (errors.terms) {
+                      setFieldError(
+                        "terms",
+                        event.target.checked
+                          ? undefined
+                          : "You must agree to the terms and conditions",
+                      );
+                    }
+                  }}
+                />
+                <span>
+                  I agree to the{" "}
+                  <button type="button" className="terms-link" onClick={openTerms}>
+                    terms &amp; conditions
+                  </button>
+                </span>
+              </label>
+              <ErrorMessage>{errors.terms}</ErrorMessage>
+            </div>
 
-              {done && (
-                <p className="register-success">
-                  Account created. Redirecting to login...
-                </p>
-              )}
-            </form>
-          </div>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              disabled={submitting || done}
+            >
+              {submitting ? "CREATING ACCOUNT..." : "Create Account"}
+            </Button>
+
+            <ErrorMessage>{error}</ErrorMessage>
+
+            {done && (
+              <p className="register-success">
+                Account created. Redirecting to login...
+              </p>
+            )}
+          </form>
         </Card>
 
         <div className="divider" />

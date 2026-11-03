@@ -16,6 +16,7 @@ import { PortalLayout } from "./pages/portal/PortalLayout";
 import { PortalPlaceholder } from "./pages/portal/PortalPlaceholder";
 import { PORTAL_NAV } from "./pages/portal/portalNav";
 import { getSupabase } from "./lib/supabase";
+import { Button } from "./components/Button";
 import { AuthProvider } from "./lib/AuthProvider";
 import { useAuth } from "./lib/useAuth";
 import { PAGE_BACKGROUNDS } from "./data/pageBackgrounds";
@@ -214,9 +215,9 @@ function AppHeader() {
             );
           })}
           {session && (
-            <button type="button" onClick={handleSignOut} className="btn btn--ghost btn--sm">
+            <Button variant="ghost" size="sm" onClick={handleSignOut}>
               Log out
-            </button>
+            </Button>
           )}
         </nav>
       </header>
